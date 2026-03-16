@@ -1,0 +1,23 @@
+// Pine Rose (Rose Pine) theme for Zellij
+// Palette: https://rosepinetheme.com/palette
+// Managed by Chezmoi. Do not edit directly.
+// ============================================================================
+// This theme is NOT built-in to Zellij. It must be loaded from this file.
+// The Catppuccin variants (latte, frappe, macchiato, mocha) ARE built-in
+// and do not need custom theme files.
+
+themes {
+    pine-rose {
+        fg "#e0def4"
+        bg "#191724"
+        black "#26233a"
+        red "#eb6f92"
+        green "#31748f"
+        yellow "#f6c177"
+        blue "#9ccfd8"
+        magenta "#c4a7e7"
+        cyan "#ebbcba"
+        white "#e0def4"
+        orange "#ebbcba"
+    }
+}

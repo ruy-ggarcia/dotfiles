@@ -1,0 +1,97 @@
+# Kitty Terminal Configuration
+# Managed by Chezmoi. Do not edit directly.
+# Source: chezmoi/dot_config/kitty/kitty.conf.tmpl
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# Theme
+# ---------------------------------------------------------------------------
+# The theme is loaded from a pointer file managed by the set-theme script.
+# current_kitty.conf contains color definitions (foreground, background,
+# color0-color15, cursor, selection, etc.). To change the theme, run:
+#   set-theme catppuccin   OR   set-theme pine-rose
+# Kitty will reload automatically via SIGUSR1 sent by the switcher.
+include ~/.config/theme/current_kitty.conf
+
+# ---------------------------------------------------------------------------
+# Font
+# ---------------------------------------------------------------------------
+font_family      MesloLGS NF
+bold_font        MesloLGS NF Bold
+italic_font      MesloLGS NF Italic
+bold_italic_font MesloLGS NF Bold Italic
+{{- if eq .chezmoi.os "darwin" }}
+font_size        13.0
+{{- else }}
+font_size        11.0
+{{- end }}
+disable_ligatures never
+
+# ---------------------------------------------------------------------------
+# Cursor
+# ---------------------------------------------------------------------------
+cursor_shape          beam
+cursor_blink_interval 0.5
+cursor_stop_blinking_after 15
+
+# ---------------------------------------------------------------------------
+# Scrollback
+# ---------------------------------------------------------------------------
+scrollback_lines 10000
+scrollback_pager_history_size 100
+
+# ---------------------------------------------------------------------------
+# Mouse
+# ---------------------------------------------------------------------------
+copy_on_select       yes
+strip_trailing_spaces smart
+url_style            curly
+
+# ---------------------------------------------------------------------------
+# Bell
+# ---------------------------------------------------------------------------
+enable_audio_bell    no
+visual_bell_duration 0
+window_alert_on_bell yes
+bell_on_tab          "🔔 "
+
+# ---------------------------------------------------------------------------
+# Window
+# ---------------------------------------------------------------------------
+remember_window_size yes
+initial_window_width 120c
+initial_window_height 40c
+{{- if eq .chezmoi.os "darwin" }}
+hide_window_decorations titlebar-only
+macos_option_as_alt yes
+macos_quit_when_last_window_closed yes
+macos_thicken_font 0.25
+{{- else }}
+hide_window_decorations no
+{{- end }}
+window_padding_width 4
+confirm_os_window_close 1
+placement_strategy center
+
+# ---------------------------------------------------------------------------
+# Tab Bar
+# ---------------------------------------------------------------------------
+tab_bar_edge         bottom
+tab_bar_style        powerline
+tab_powerline_style  slanted
+tab_title_template   "{index}: {title}"
+active_tab_font_style   bold
+inactive_tab_font_style normal
+
+# ---------------------------------------------------------------------------
+# Performance
+# ---------------------------------------------------------------------------
+repaint_delay    10
+input_delay      3
+sync_to_monitor  yes
+
+# ---------------------------------------------------------------------------
+# Shell
+# ---------------------------------------------------------------------------
+shell .
+editor .

@@ -389,3 +389,275 @@ Logic:
 - **Quick re-run:** Execute `~/.dotfiles/.bin/dotfiles` directly — skips repo/binary update, useful for changing theme or adding modules.
 - **Version display:** Binary prints version from `Cargo.toml` (compiled in at build time) in the welcome header.
 
+## 6. Theme System
+
+### Overview
+
+The theme system implements a semantic translation layer between native theme color definitions and tool-specific configuration formats. Each theme variant is defined as a TOML palette file conforming to a strict JSON Schema contract. The Rust engine validates palettes at discovery time and passes them as Tera template context at render time. Templates consume the contract blindly — they never reference theme-specific color names.
+
+### Palette Schema
+
+Every palette TOML file must implement this exact structure:
+
+```toml
+# themes/palettes/catppuccin-mocha.toml
+
+[meta]
+name = "Catppuccin Mocha"
+variant = "dark"                    # "dark" or "light"
+nvim_theme = "catppuccin-mocha"     # String for vim.cmd.colorscheme()
+nvim_plugin = "catppuccin"          # Lua require() target
+nvim_variant = "mocha"              # Plugin-specific variant identifier
+
+[colors.core]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+cursor_bg = "#f5e0dc"
+cursor_fg = "#1e1e2e"
+selection_bg = "#585b70"
+selection_fg = "#cdd6f4"
+url = "#89b4fa"
+
+[colors.ansi.normal]
+black = "#45475a"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#f5c2e7"
+cyan = "#94e2d5"
+white = "#bac2de"
+
+[colors.ansi.bright]
+black = "#585b70"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#f5c2e7"
+cyan = "#94e2d5"
+white = "#a6adc8"
+
+[colors.ui]
+border_active = "#cba6f7"
+border_inactive = "#6c7086"
+status_bg = "#11111b"
+status_fg = "#cdd6f4"
+tab_active_bg = "#cba6f7"
+tab_active_fg = "#11111b"
+tab_inactive_bg = "#181825"
+tab_inactive_fg = "#bac2de"
+```
+
+**Total: 31 color keys + 5 meta keys.** Structured in three semantic groups:
+
+| Group | Keys | Purpose |
+|-------|------|---------|
+| `colors.core` | 7 | Terminal base colors: background, foreground, cursor, selection, URLs |
+| `colors.ansi.normal` + `colors.ansi.bright` | 16 | Standard ANSI terminal colors (0-15) |
+| `colors.ui` | 8 | Multiplexer/shell UI: borders, status bar, tabs |
+| `meta` | 5 | Theme identity and NeoVim plugin configuration |
+
+### Schema Validation (`themes/schema.json`)
+
+All palette TOML files are validated against a JSON Schema during the Discovery phase. Invalid palettes are rejected with a clear error before any TUI prompts appear.
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["meta", "colors"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["name", "variant", "nvim_theme", "nvim_plugin", "nvim_variant"],
+      "properties": {
+        "name": { "type": "string" },
+        "variant": { "type": "string", "enum": ["dark", "light"] },
+        "nvim_theme": { "type": "string" },
+        "nvim_plugin": { "type": "string" },
+        "nvim_variant": { "type": "string" }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "required": ["core", "ansi", "ui"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["background", "foreground", "cursor_bg", "cursor_fg", "selection_bg", "selection_fg", "url"]
+        },
+        "ansi": {
+          "type": "object",
+          "required": ["normal", "bright"],
+          "properties": {
+            "normal": { "$ref": "#/definitions/ansi_colors" },
+            "bright": { "$ref": "#/definitions/ansi_colors" }
+          }
+        },
+        "ui": {
+          "type": "object",
+          "required": ["border_active", "border_inactive", "status_bg", "status_fg", "tab_active_bg", "tab_active_fg", "tab_inactive_bg", "tab_inactive_fg"]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ansi_colors": {
+      "type": "object",
+      "required": ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"],
+      "patternProperties": {
+        "^.*$": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+      }
+    }
+  }
+}
+```
+
+### Tool Template Examples
+
+Templates consume the palette contract via Tera variables. Each tool gets its own `.tera` template.
+
+#### Kitty (`modules/kitty/config/kitty/kitty.conf.tera`)
+
+```text
+foreground {{ colors.core.foreground }}
+background {{ colors.core.background }}
+selection_foreground {{ colors.core.selection_fg }}
+selection_background {{ colors.core.selection_bg }}
+url_color {{ colors.core.url }}
+cursor {{ colors.core.cursor_bg }}
+cursor_text_color {{ colors.core.cursor_fg }}
+
+color0  {{ colors.ansi.normal.black }}
+color1  {{ colors.ansi.normal.red }}
+color2  {{ colors.ansi.normal.green }}
+color3  {{ colors.ansi.normal.yellow }}
+color4  {{ colors.ansi.normal.blue }}
+color5  {{ colors.ansi.normal.magenta }}
+color6  {{ colors.ansi.normal.cyan }}
+color7  {{ colors.ansi.normal.white }}
+color8  {{ colors.ansi.bright.black }}
+color9  {{ colors.ansi.bright.red }}
+color10 {{ colors.ansi.bright.green }}
+color11 {{ colors.ansi.bright.yellow }}
+color12 {{ colors.ansi.bright.blue }}
+color13 {{ colors.ansi.bright.magenta }}
+color14 {{ colors.ansi.bright.cyan }}
+color15 {{ colors.ansi.bright.white }}
+```
+
+#### Alacritty (`modules/alacritty/config/alacritty/alacritty.toml.tera`)
+
+```toml
+[colors.primary]
+background = "{{ colors.core.background }}"
+foreground = "{{ colors.core.foreground }}"
+
+[colors.cursor]
+cursor = "{{ colors.core.cursor_bg }}"
+text = "{{ colors.core.cursor_fg }}"
+
+[colors.selection]
+background = "{{ colors.core.selection_bg }}"
+text = "{{ colors.core.selection_fg }}"
+
+[colors.normal]
+black   = "{{ colors.ansi.normal.black }}"
+red     = "{{ colors.ansi.normal.red }}"
+green   = "{{ colors.ansi.normal.green }}"
+yellow  = "{{ colors.ansi.normal.yellow }}"
+blue    = "{{ colors.ansi.normal.blue }}"
+magenta = "{{ colors.ansi.normal.magenta }}"
+cyan    = "{{ colors.ansi.normal.cyan }}"
+white   = "{{ colors.ansi.normal.white }}"
+
+[colors.bright]
+black   = "{{ colors.ansi.bright.black }}"
+red     = "{{ colors.ansi.bright.red }}"
+green   = "{{ colors.ansi.bright.green }}"
+yellow  = "{{ colors.ansi.bright.yellow }}"
+blue    = "{{ colors.ansi.bright.blue }}"
+magenta = "{{ colors.ansi.bright.magenta }}"
+cyan    = "{{ colors.ansi.bright.cyan }}"
+white   = "{{ colors.ansi.bright.white }}"
+```
+
+#### Zellij (`modules/zellij/config/zellij/config.kdl.tera`)
+
+```kdl
+themes {
+    dotfiles {
+        fg "{{ colors.core.foreground }}"
+        bg "{{ colors.ui.status_bg }}"
+        black "{{ colors.ansi.normal.black }}"
+        red "{{ colors.ansi.normal.red }}"
+        green "{{ colors.ansi.normal.green }}"
+        yellow "{{ colors.ansi.normal.yellow }}"
+        blue "{{ colors.ansi.normal.blue }}"
+        magenta "{{ colors.ansi.normal.magenta }}"
+        cyan "{{ colors.ansi.normal.cyan }}"
+        white "{{ colors.ansi.normal.white }}"
+        orange "{{ colors.ansi.normal.yellow }}"
+    }
+}
+theme "dotfiles"
+```
+
+#### tmux (`modules/tmux/home/.tmux.conf.tera`)
+
+```text
+set -g status-style "bg={{ colors.ui.status_bg }},fg={{ colors.ui.status_fg }}"
+set -g pane-active-border-style "fg={{ colors.ui.border_active }}"
+set -g pane-border-style "fg={{ colors.ui.border_inactive }}"
+set -g window-status-current-style "bg={{ colors.ui.tab_active_bg }},fg={{ colors.ui.tab_active_fg }}"
+set -g window-status-style "bg={{ colors.ui.tab_inactive_bg }},fg={{ colors.ui.tab_inactive_fg }}"
+```
+
+### NeoVim Strategy
+
+NeoVim is handled differently from all other tools. Instead of injecting hex color values into the configuration, we leverage the NeoVim plugin ecosystem. Colorscheme plugins (catppuccin.nvim, rose-pine.nvim, kanagawa.nvim) define hundreds of highlight groups internally — syntax, tree-sitter, LSP diagnostics, git signs, telescope, and more. Replicating this via Tera templates would be impractical and fragile.
+
+Instead, the Tera template generates a Lua bridge file that tells NeoVim which plugin to load and how to configure its variant:
+
+#### NeoVim (`modules/nvim/config/nvim/lua/core/theme.lua.tera`)
+
+```lua
+local plugin = "{{ meta.nvim_plugin }}"
+local variant = "{{ meta.nvim_variant }}"
+local theme_name = "{{ meta.nvim_theme }}"
+
+if plugin == "catppuccin" then
+    require("catppuccin").setup({ flavour = variant })
+    vim.cmd.colorscheme(theme_name)
+elseif plugin == "rose-pine" then
+    require("rose-pine").setup({ variant = variant })
+    vim.cmd.colorscheme(theme_name)
+elseif plugin == "kanagawa" then
+    require("kanagawa").setup({ theme = variant })
+    vim.cmd.colorscheme(theme_name)
+else
+    vim.cmd.colorscheme(theme_name)
+end
+```
+
+The `[meta]` section of each palette TOML provides the three values needed:
+- `nvim_plugin` — the Lua module to `require()` and configure
+- `nvim_variant` — the plugin-specific variant identifier passed to `setup()`
+- `nvim_theme` — the string passed to `vim.cmd.colorscheme()`
+
+Each plugin has a different setup API, which is why the bridge file uses conditional logic. The fallback branch handles any future theme whose plugin uses the standard `vim.cmd.colorscheme()` call without a setup step.
+
+### Workflow: Adding a New Theme
+
+To add a theme (e.g., Dracula), a maintainer:
+
+1. Look up the official hex color values from the theme's documentation.
+2. Create `themes/palettes/dracula.toml`.
+3. Fill in all 31 color keys mapping the theme's native colors to the semantic schema (e.g., Dracula's `#282a36` → `colors.core.background`).
+4. Fill in the 5 `[meta]` fields including the NeoVim plugin identifiers.
+5. Run the installer — the scanner validates the TOML against `schema.json`. If a key is missing, validation fails with a clear error: `Invalid palette dracula.toml: missing key 'colors.core.url'`.
+6. If validation passes, "Dracula" appears in the TUI theme selector automatically.
+
+No template changes required. No Rust code changes required.
+

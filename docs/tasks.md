@@ -135,7 +135,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [x] | T-039 | Create `build.yml` CI workflow | Trigger on PRs to `main`; steps: `cargo fmt --check`, `cargo clippy -- -D warnings`, `cargo test` | T-007 | M |
 | - [x] | T-040 | Create `release.yml` CD workflow | Trigger on `v*` tags; build matrix for 3 targets; cross-compile `--release`; compress each binary as `dotfiles-{target}.tar.gz`; attach to GitHub Release via `softprops/action-gh-release` | T-039 | L |
 | - [x] | T-041 | Configure cross-compilation | Add `cross` crate or configure `cargo-zigbuild` in release workflow for Linux MUSL cross-compilation from macOS runner | T-040 | M |
-| - [ ] | T-042 | Test `install.sh` locally | Run script on macOS; verify `~/.dotfiles/.bin/dotfiles` is present and executable | T-038, T-040 | S |
+| - [x] | T-042 | Test `install.sh` locally | Run script on macOS; verify `~/.dotfiles/.bin/dotfiles` is present and executable | T-038, T-040 | S |
 
 **Acceptance Criteria (M4):** `build.yml` passes on a test PR; `release.yml` triggers on `v0.1.0` tag and attaches 3 tarballs to the release; `install.sh` downloads and runs the correct binary.
 

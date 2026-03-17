@@ -82,10 +82,10 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-021 | Implement `process_symlinks` | Create `installer/src/symlink.rs` with `process_symlinks(jobs: &[SymlinkJob]) -> Result<()>` implementing the three-case idempotent algorithm (missing → create, correct → skip, conflict → backup + create) | T-008 | L |
-| - [ ] | T-022 | Implement backup logic | Generate `{target}.bak.{chrono_timestamp}` path; rename existing target before creating symlink | T-021 | M |
-| - [ ] | T-023 | Parent directory creation | Add `create_dir_all` for parent directories of each symlink target | T-021 | S |
-| - [ ] | T-024 | Unit tests for `process_symlinks` | Missing target (creates symlink), correct symlink (no-op), conflicting file (backup created, new symlink correct) | T-021, T-022 | M |
+| - [x] | T-021 | Implement `process_symlinks` | Create `installer/src/symlink.rs` with `process_symlinks(jobs: &[SymlinkJob]) -> Result<()>` implementing the three-case idempotent algorithm (missing → create, correct → skip, conflict → backup + create) | T-008 | L |
+| - [x] | T-022 | Implement backup logic | Generate `{target}.bak.{chrono_timestamp}` path; rename existing target before creating symlink | T-021 | M |
+| - [x] | T-023 | Parent directory creation | Add `create_dir_all` for parent directories of each symlink target | T-021 | S |
+| - [x] | T-024 | Unit tests for `process_symlinks` | Missing target (creates symlink), correct symlink (no-op), conflicting file (backup created, new symlink correct) | T-021, T-022 | M |
 
 ### 2F — Engine Orchestrator
 

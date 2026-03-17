@@ -194,7 +194,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [ ] | T-064 | Complete Zellij module | `modules/zellij/packages.toml` and full `config.kdl.tera` with keybindings, default layout, plugin settings beyond just the theme block | T-058 | L |
 | - [ ] | T-065 | Complete tmux module | `modules/tmux/packages.toml` and full `.tmux.conf.tera` with keybindings, TPM plugin manager, status bar format beyond just colors | T-059 | L |
 | - [ ] | T-066 | Create full NeoVim config tree | `modules/nvim/config/nvim/`: `init.lua`, `lua/core/options.lua`, `lua/core/keymaps.lua`, `lua/core/theme.lua.tera`, `lua/plugins/` with lazy.nvim specs (LSP, treesitter, telescope, colorscheme plugins) | T-060 | XL |
-| - [ ] | T-067 | Create opencode module | `modules/opencode/packages.toml` and config files under `modules/opencode/config/opencode/` (skills, `AGENTS.md`, static OpenCode config) | T-025 | M |
+| - [x] | T-067 | Create opencode module | `modules/opencode/packages.toml` and config files under `modules/opencode/config/opencode/` (skills, `AGENTS.md`, static OpenCode config) | T-025 | M |
 | - [x] | T-068 | Create `fonts/manifest.toml` | Font entries: `MesloLGS NF`, `Iosevka Nerd Font`, `JetBrainsMono NF` — each with name and GitHub Release download URL | T-006 | S |
 | - [ ] | T-069 | Implement font installer | Read `fonts/manifest.toml`; download and install fonts to `~/Library/Fonts` (macOS) or `~/.local/share/fonts` (Linux) | T-068, T-026 | L |
 | - [ ] | T-070 | Add font selection to TUI | `inquire::MultiSelect` for fonts after module selection in `tui.rs` | T-069, T-031 | M |

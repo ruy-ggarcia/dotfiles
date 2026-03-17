@@ -119,6 +119,7 @@ pub fn generate_plan(selection: &UserSelection, repo_root: &Path) -> Result<Plan
 
 /// Decides whether a file is a Tera template or static, and pushes the
 /// appropriate jobs into the mutable vecs.
+#[allow(clippy::too_many_arguments)]
 fn plan_file(
     src: std::path::PathBuf,
     target: std::path::PathBuf,

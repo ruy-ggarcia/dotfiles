@@ -172,11 +172,11 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-056 | `kitty.conf.tera` | Full Kitty color config using `{{ colors.core.* }}` and `{{ colors.ansi.* }}` variables as specified in `design.md §6` | T-008 | M |
-| - [ ] | T-057 | `alacritty.toml.tera` | Alacritty TOML color config using theme variables | T-008 | M |
-| - [ ] | T-058 | `config.kdl.tera` (Zellij) | Zellij KDL theme block using `colors.ansi.*` and `colors.ui.*` | T-008 | M |
-| - [ ] | T-059 | `.tmux.conf.tera` | tmux status bar and pane border styles using `colors.ui.*` | T-008 | M |
-| - [ ] | T-060 | `theme.lua.tera` (Neovim) | Conditional Lua bridge for catppuccin/rose-pine/kanagawa plugin setup using `{{ meta.nvim_plugin }}`, `{{ meta.nvim_variant }}`, `{{ meta.nvim_theme }}` | T-008 | L |
+| - [x] | T-056 | `kitty.conf.tera` | Full Kitty color config using `{{ colors.core.* }}` and `{{ colors.ansi.* }}` variables as specified in `design.md §6` | T-008 | M |
+| - [x] | T-057 | `alacritty.toml.tera` | Alacritty TOML color config using theme variables | T-008 | M |
+| - [x] | T-058 | `config.kdl.tera` (Zellij) | Zellij KDL theme block using `colors.ansi.*` and `colors.ui.*` | T-008 | M |
+| - [x] | T-059 | `.tmux.conf.tera` | tmux status bar and pane border styles using `colors.ui.*` | T-008 | M |
+| - [x] | T-060 | `theme.lua.tera` (Neovim) | Conditional Lua bridge for catppuccin/rose-pine/kanagawa plugin setup using `{{ meta.nvim_plugin }}`, `{{ meta.nvim_variant }}`, `{{ meta.nvim_theme }}` | T-008 | L |
 
 **Acceptance Criteria (M5):** All 10 palettes pass validation; running the installer with the kitty module + any palette renders a valid `kitty.conf` in `.rendered/`; switching themes re-renders correctly.
 

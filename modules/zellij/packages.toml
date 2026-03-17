@@ -1,0 +1,3 @@
+[packages]
+macos = ["zellij"]
+ubuntu = ["zellij"]

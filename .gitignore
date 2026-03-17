@@ -1,0 +1,8 @@
+# Rust build artifacts
+installer/target/
+
+# Rendered template output (regenerated on every run)
+.rendered/
+
+# Backup files created by symlink engine
+*.bak.*

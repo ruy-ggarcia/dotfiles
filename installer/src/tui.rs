@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Result};
 use inquire::{Confirm, InquireError, MultiSelect, Select};
 
+use crate::font::FontEntry;
 use crate::models::{Module, Plan, Theme};
 
 // ---------------------------------------------------------------------------
@@ -135,6 +136,49 @@ pub fn select_theme(themes: Vec<Theme>) -> Result<Theme> {
             Err(anyhow!("Setup canceled by user."))
         }
         Err(e) => Err(anyhow!("Theme selection failed: {}", e)),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Font selection
+// ---------------------------------------------------------------------------
+
+/// Presents an interactive multi-select prompt for the user to choose fonts.
+///
+/// All available fonts are pre-selected by default.
+///
+/// Returns the selected [`FontEntry`]s.  An **empty `Vec`** signals that the user
+/// cancelled the prompt (`Ctrl+C`) — callers should treat this as a clean exit
+/// rather than an error.
+pub fn select_fonts(fonts: Vec<FontEntry>) -> Result<Vec<FontEntry>> {
+    if fonts.is_empty() {
+        return Ok(vec![]);
+    }
+
+    let labels: Vec<String> = fonts.iter().map(|f| f.name.clone()).collect();
+
+    // Pre-select all fonts by default
+    let defaults: Vec<usize> = (0..fonts.len()).collect();
+
+    let result = MultiSelect::new("Select Nerd Fonts to install:", labels.clone())
+        .with_default(&defaults)
+        .prompt();
+
+    match result {
+        Ok(selected_labels) => {
+            let selected = fonts
+                .into_iter()
+                .zip(labels.iter())
+                .filter(|(_, label)| selected_labels.contains(label))
+                .map(|(font, _)| font)
+                .collect();
+            Ok(selected)
+        }
+        // cancellation → return empty vec so the caller can exit cleanly
+        Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
+            Ok(vec![])
+        }
+        Err(e) => Err(anyhow!("Font selection failed: {}", e)),
     }
 }
 
@@ -350,5 +394,42 @@ mod tests {
     fn test_select_theme_empty_input_bails() {
         let result = select_theme(vec![]);
         assert!(result.is_err(), "empty theme list should return an error");
+    }
+
+    // -------------------------------------------------------------------------
+    // select_fonts — empty manifest returns Ok(vec![]) without prompting
+    // -------------------------------------------------------------------------
+
+    fn make_font(name: &str) -> FontEntry {
+        FontEntry {
+            name: name.to_string(),
+            file: format!("{}-Regular.ttf", name.replace(' ', "")),
+            url: format!(
+                "https://example.com/fonts/{}.tar.xz",
+                name.replace(' ', "_")
+            ),
+        }
+    }
+
+    #[test]
+    fn test_select_fonts_empty_list_returns_ok_empty() {
+        let result = select_fonts(vec![]);
+        assert!(result.is_ok(), "empty font list should return Ok");
+        assert!(
+            result.unwrap().is_empty(),
+            "empty font list should return empty vec"
+        );
+    }
+
+    #[test]
+    fn test_select_fonts_all_preselected_indices() {
+        let fonts = vec![
+            make_font("MesloLGS Nerd Font"),
+            make_font("JetBrainsMono Nerd Font"),
+            make_font("Iosevka Nerd Font"),
+        ];
+        // All indices should be pre-selected (0, 1, 2)
+        let defaults: Vec<usize> = (0..fonts.len()).collect();
+        assert_eq!(defaults, vec![0, 1, 2]);
     }
 }

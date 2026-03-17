@@ -197,7 +197,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [x] | T-067 | Create opencode module | `modules/opencode/packages.toml` and config files under `modules/opencode/config/opencode/` (skills, `AGENTS.md`, static OpenCode config) | T-025 | M |
 | - [x] | T-068 | Create `fonts/manifest.toml` | Font entries: `MesloLGS NF`, `Iosevka Nerd Font`, `JetBrainsMono NF` — each with name and GitHub Release download URL | T-006 | S |
 | - [x] | T-069 | Implement font installer | Read `fonts/manifest.toml`; download and install fonts to `~/Library/Fonts` (macOS) or `~/.local/share/fonts` (Linux) | T-068, T-026 | L |
-| - [ ] | T-070 | Add font selection to TUI | `inquire::MultiSelect` for fonts after module selection in `tui.rs` | T-069, T-031 | M |
+| - [x] | T-070 | Add font selection to TUI | `inquire::MultiSelect` for fonts after module selection in `tui.rs` | T-069, T-031 | M |
 
 **Acceptance Criteria (M6):** Full end-to-end install on macOS provisions zsh + kitty + zellij + neovim + opencode with catppuccin-mocha; all symlinks in `~/` and `~/.config/` are correct; switching to rose-pine re-renders all templates correctly.
 

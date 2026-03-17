@@ -45,6 +45,25 @@ fn main() -> Result<()> {
 
     let theme_name = selected_theme.name.clone();
 
+    // Font selection — skip gracefully if manifest is missing or empty
+    let font_manifest_path = repo_root.join("fonts").join("manifest.toml");
+    let selected_fonts = if font_manifest_path.exists() {
+        match font::load_font_manifest(&repo_root) {
+            Ok(font_entries) if !font_entries.is_empty() => {
+                let chosen = tui::select_fonts(font_entries)?;
+                if chosen.is_empty() {
+                    // Ctrl+C during font selection — exit cleanly
+                    println!("Setup canceled by user.");
+                    std::process::exit(0);
+                }
+                chosen
+            }
+            _ => vec![],
+        }
+    } else {
+        vec![]
+    };
+
     let selection = models::UserSelection {
         selected_modules,
         selected_theme,
@@ -61,6 +80,9 @@ fn main() -> Result<()> {
 
     // Phase 4: Execution
     engine::execute_plan(&plan, &selection.selected_theme)?;
+
+    // Font installation — runs after the main plan so symlinks are already in place
+    font::install_fonts(&selected_fonts)?;
 
     tui::display_success();
 

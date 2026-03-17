@@ -1,6 +1,7 @@
 use anyhow::Result;
 
 mod engine;
+mod font;
 mod models;
 mod package;
 mod scanner;

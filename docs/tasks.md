@@ -133,7 +133,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 |--------|----|-------|-------------|--------------|------------|
 | - [x] | T-038 | Write `install.sh` | Clone or pull `~/.dotfiles`; detect OS via `uname -s` / `uname -m`; map to Rust target triple; download `dotfiles-{target}.tar.gz` from latest GitHub Release to `~/.dotfiles/.bin/`; extract and execute | T-036 | L |
 | - [x] | T-039 | Create `build.yml` CI workflow | Trigger on PRs to `main`; steps: `cargo fmt --check`, `cargo clippy -- -D warnings`, `cargo test` | T-007 | M |
-| - [ ] | T-040 | Create `release.yml` CD workflow | Trigger on `v*` tags; build matrix for 3 targets; cross-compile `--release`; compress each binary as `dotfiles-{target}.tar.gz`; attach to GitHub Release via `softprops/action-gh-release` | T-039 | L |
+| - [x] | T-040 | Create `release.yml` CD workflow | Trigger on `v*` tags; build matrix for 3 targets; cross-compile `--release`; compress each binary as `dotfiles-{target}.tar.gz`; attach to GitHub Release via `softprops/action-gh-release` | T-039 | L |
 | - [ ] | T-041 | Configure cross-compilation | Add `cross` crate or configure `cargo-zigbuild` in release workflow for Linux MUSL cross-compilation from macOS runner | T-040 | M |
 | - [ ] | T-042 | Test `install.sh` locally | Run script on macOS; verify `~/.dotfiles/.bin/dotfiles` is present and executable | T-038, T-040 | S |
 

@@ -189,10 +189,10 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
 | - [x] | T-061 | Complete `modules/zsh/home/.zshrc` | Full Zsh config: Oh-My-Zsh or Prezto setup, aliases, PATH exports, plugin list; static file (no Tera) | T-005 | L |
-| - [ ] | T-062 | Complete Kitty module | `modules/kitty/packages.toml` and any additional static Kitty config files (font size, keybindings) alongside `kitty.conf.tera` | T-056, T-062 | M |
-| - [ ] | T-063 | Complete Alacritty module | `modules/alacritty/packages.toml` and static Alacritty config sections (font, window, scrolling) alongside the color template | T-057 | M |
-| - [ ] | T-064 | Complete Zellij module | `modules/zellij/packages.toml` and full `config.kdl.tera` with keybindings, default layout, plugin settings beyond just the theme block | T-058 | L |
-| - [ ] | T-065 | Complete tmux module | `modules/tmux/packages.toml` and full `.tmux.conf.tera` with keybindings, TPM plugin manager, status bar format beyond just colors | T-059 | L |
+| - [x] | T-062 | Complete Kitty module | `modules/kitty/packages.toml` and any additional static Kitty config files (font size, keybindings) alongside `kitty.conf.tera` | T-056, T-062 | M |
+| - [x] | T-063 | Complete Alacritty module | `modules/alacritty/packages.toml` and static Alacritty config sections (font, window, scrolling) alongside the color template | T-057 | M |
+| - [x] | T-064 | Complete Zellij module | `modules/zellij/packages.toml` and full `config.kdl.tera` with keybindings, default layout, plugin settings beyond just the theme block | T-058 | L |
+| - [x] | T-065 | Complete tmux module | `modules/tmux/packages.toml` and full `.tmux.conf.tera` with keybindings, TPM plugin manager, status bar format beyond just colors | T-059 | L |
 | - [ ] | T-066 | Create full NeoVim config tree | `modules/nvim/config/nvim/`: `init.lua`, `lua/core/options.lua`, `lua/core/keymaps.lua`, `lua/core/theme.lua.tera`, `lua/plugins/` with lazy.nvim specs (LSP, treesitter, telescope, colorscheme plugins) | T-060 | XL |
 | - [x] | T-067 | Create opencode module | `modules/opencode/packages.toml` and config files under `modules/opencode/config/opencode/` (skills, `AGENTS.md`, static OpenCode config) | T-025 | M |
 | - [x] | T-068 | Create `fonts/manifest.toml` | Font entries: `MesloLGS NF`, `Iosevka Nerd Font`, `JetBrainsMono NF` — each with name and GitHub Release download URL | T-006 | S |

@@ -6,10 +6,9 @@ mod package;
 mod scanner;
 mod symlink;
 mod template;
+mod tui;
 
 fn main() -> Result<()> {
-    println!("Dotfiles Installer v{}", env!("CARGO_PKG_VERSION"));
-
     // Determine repo root (current working directory)
     let repo_root = std::env::current_dir()?;
 
@@ -24,19 +23,45 @@ fn main() -> Result<()> {
         anyhow::bail!("No themes found in themes/palettes/");
     }
 
-    // Phase 2: Hardcoded selection (TUI will replace this in M3)
-    let selection = models::UserSelection {
-        selected_modules: modules,
-        selected_theme: themes.into_iter().next().unwrap(),
+    // Phase 2: TUI wizard
+    tui::display_welcome();
+
+    let selected_modules = tui::select_modules(modules)?;
+    if selected_modules.is_empty() {
+        println!("Setup canceled by user.");
+        std::process::exit(0);
+    }
+
+    // Err from select_theme means cancelled
+    let selected_theme = match tui::select_theme(themes) {
+        Ok(theme) => theme,
+        Err(e) => {
+            // "Setup canceled by user." is the cancellation message from tui.rs
+            println!("{}", e);
+            std::process::exit(0);
+        }
     };
 
-    // Phase 3: Execution
+    let theme_name = selected_theme.name.clone();
+
+    let selection = models::UserSelection {
+        selected_modules,
+        selected_theme,
+    };
+
+    // Phase 3: Plan generation + confirmation
     let plan = engine::generate_plan(&selection, &repo_root)?;
+
+    let confirmed = tui::confirm_plan(&plan, &theme_name)?;
+    if !confirmed {
+        println!("Setup canceled by user.");
+        std::process::exit(0);
+    }
+
+    // Phase 4: Execution
     engine::execute_plan(&plan, &selection.selected_theme)?;
 
-    println!("\n=========================================");
-    println!("  SUCCESS: Environment provisioned.");
-    println!("=========================================");
+    tui::display_success();
 
     Ok(())
 }

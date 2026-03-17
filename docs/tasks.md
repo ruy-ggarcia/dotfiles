@@ -112,14 +112,14 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-030 | Implement `display_welcome` | Create `installer/src/tui.rs` with `display_welcome(os: &str, pkg_mgr: &str, version: &str)` — prints ASCII header banner with OS, arch, package manager, and version string | T-028 | S |
-| - [ ] | T-031 | Implement `select_modules` | Add `select_modules(modules: Vec<Module>) -> Result<Vec<Module>>` — uses `inquire::MultiSelect`; pre-selects primary tools (zsh, kitty, zellij, neovim, opencode) | T-030 | M |
-| - [ ] | T-032 | Implement `select_theme` | Add `select_theme(themes: Vec<Theme>) -> Result<Theme>` — uses `inquire::Select`; default selection `catppuccin-mocha` | T-030 | M |
-| - [ ] | T-033 | Implement `confirm_plan` | Add `confirm_plan(plan: &Plan, theme: &Theme) -> Result<bool>` — shows plan summary (package count, template count, symlink count, theme name) and uses `inquire::Confirm` | T-030, T-025 | M |
-| - [ ] | T-034 | Handle Ctrl+C / cancellation | Bubble up all `inquire` errors; `main.rs` catches `InquireError::OperationCanceled` and exits cleanly with message "Setup canceled by user." | T-031, T-032, T-033 | S |
-| - [ ] | T-035 | Add execution feedback | Print `[✓] Installing packages...`, `[✓] Rendering templates...`, `[✓] Creating symlinks...` and per-symlink `  -> {target}` lines | T-026 | S |
-| - [ ] | T-036 | Wire TUI into `main.rs` | Replace hardcoded selections with `tui::select_modules()` and `tui::select_theme()`; confirm plan before execution; print success or failure footer | T-031, T-032, T-033, T-034, T-035 | M |
-| - [ ] | T-037 | Print version from `Cargo.toml` | Embed version string at compile time via `env!("CARGO_PKG_VERSION")` in the welcome header | T-030 | S |
+| - [x] | T-030 | Implement `display_welcome` | Create `installer/src/tui.rs` with `display_welcome(os: &str, pkg_mgr: &str, version: &str)` — prints ASCII header banner with OS, arch, package manager, and version string | T-028 | S |
+| - [x] | T-031 | Implement `select_modules` | Add `select_modules(modules: Vec<Module>) -> Result<Vec<Module>>` — uses `inquire::MultiSelect`; pre-selects primary tools (zsh, kitty, zellij, neovim, opencode) | T-030 | M |
+| - [x] | T-032 | Implement `select_theme` | Add `select_theme(themes: Vec<Theme>) -> Result<Theme>` — uses `inquire::Select`; default selection `catppuccin-mocha` | T-030 | M |
+| - [x] | T-033 | Implement `confirm_plan` | Add `confirm_plan(plan: &Plan, theme: &Theme) -> Result<bool>` — shows plan summary (package count, template count, symlink count, theme name) and uses `inquire::Confirm` | T-030, T-025 | M |
+| - [x] | T-034 | Handle Ctrl+C / cancellation | Bubble up all `inquire` errors; `main.rs` catches `InquireError::OperationCanceled` and exits cleanly with message "Setup canceled by user." | T-031, T-032, T-033 | S |
+| - [x] | T-035 | Add execution feedback | Print `[✓] Installing packages...`, `[✓] Rendering templates...`, `[✓] Creating symlinks...` and per-symlink `  -> {target}` lines | T-026 | S |
+| - [x] | T-036 | Wire TUI into `main.rs` | Replace hardcoded selections with `tui::select_modules()` and `tui::select_theme()`; confirm plan before execution; print success or failure footer | T-031, T-032, T-033, T-034, T-035 | M |
+| - [x] | T-037 | Print version from `Cargo.toml` | Embed version string at compile time via `env!("CARGO_PKG_VERSION")` in the welcome header | T-030 | S |
 
 **Acceptance Criteria (M3):** Full wizard runs; selecting zsh + catppuccin-mocha + confirming → symlink created; Ctrl+C exits cleanly; re-run is idempotent.
 

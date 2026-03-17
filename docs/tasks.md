@@ -49,8 +49,8 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-008 | Create `models.rs` | Define structs: `Theme`, `Module`, `UserSelection`, `Plan`, `TemplateJob`, `SymlinkJob` as specified in `design.md §3`; all fields `pub`, derive `Debug` | T-007 | M |
-| - [ ] | T-009 | Wire models into `main.rs` | Declare `mod models;` in `main.rs`; verify it compiles with no unused-import warnings | T-008 | S |
+| - [x] | T-008 | Create `models.rs` | Define structs: `Theme`, `Module`, `UserSelection`, `Plan`, `TemplateJob`, `SymlinkJob` as specified in `design.md §3`; all fields `pub`, derive `Debug` | T-007 | M |
+| - [x] | T-009 | Wire models into `main.rs` | Declare `mod models;` in `main.rs`; verify it compiles with no unused-import warnings | T-008 | S |
 
 ### 2B — Scanner
 

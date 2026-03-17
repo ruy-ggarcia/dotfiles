@@ -35,7 +35,7 @@ info "Setting up ~/.dotfiles"
 
 if [[ ! -d "${DOTFILES_DIR}" ]]; then
   info "Cloning repository to ${DOTFILES_DIR}"
-  git clone "https://github.com/${REPO}.git" "${DOTFILES_DIR}" \
+  git clone "git@github.com:${REPO}.git" "${DOTFILES_DIR}" \
     || err "Failed to clone repository. Check your internet connection and try again."
   ok "Repository cloned"
 else

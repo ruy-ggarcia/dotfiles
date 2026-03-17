@@ -1,0 +1,45 @@
+[meta]
+name        = "Kanagawa Lotus"
+variant     = "light"
+nvim_plugin = "rebelot/kanagawa.nvim"
+nvim_variant = "lotus"
+nvim_theme  = "kanagawa-lotus"
+
+[colors.core]
+background   = "#f2ecbc"
+foreground   = "#545464"
+cursor_bg    = "#4d699b"
+cursor_fg    = "#f2ecbc"
+selection_bg = "#c9cbd1"
+selection_fg = "#545464"
+url          = "#4e8ca2"
+
+[colors.ansi.normal]
+black   = "#dcd7ba"
+red     = "#c84053"
+green   = "#6f894e"
+yellow  = "#77713f"
+blue    = "#4d699b"
+magenta = "#b35b79"
+cyan    = "#597b75"
+white   = "#545464"
+
+[colors.ansi.bright]
+black   = "#8a8980"
+red     = "#d7474b"
+green   = "#6e915f"
+yellow  = "#836f4a"
+blue    = "#4e8ca2"
+magenta = "#624c83"
+cyan    = "#5e857a"
+white   = "#43436c"
+
+[colors.ui]
+border_active   = "#4d699b"
+border_inactive = "#8a8980"
+status_bg       = "#e5ddb0"
+status_fg       = "#545464"
+tab_active_bg   = "#dcd5ac"
+tab_active_fg   = "#545464"
+tab_inactive_bg = "#e5ddb0"
+tab_inactive_fg = "#8a8980"

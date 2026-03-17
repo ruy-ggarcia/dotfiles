@@ -163,9 +163,9 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [x] | T-049 | `rose-pine.toml` | Rosé Pine Main variant | T-043 | M |
 | - [x] | T-050 | `rose-pine-moon.toml` | Rosé Pine Moon variant | T-043 | M |
 | - [x] | T-051 | `rose-pine-dawn.toml` | Rosé Pine Dawn (light) variant | T-043 | M |
-| - [ ] | T-052 | `kanagawa-wave.toml` | Kanagawa Wave variant | T-043 | M |
-| - [ ] | T-053 | `kanagawa-dragon.toml` | Kanagawa Dragon variant | T-043 | M |
-| - [ ] | T-054 | `kanagawa-lotus.toml` | Kanagawa Lotus (light) variant | T-043 | M |
+| - [x] | T-052 | `kanagawa-wave.toml` | Kanagawa Wave variant | T-043 | M |
+| - [x] | T-053 | `kanagawa-dragon.toml` | Kanagawa Dragon variant | T-043 | M |
+| - [x] | T-054 | `kanagawa-lotus.toml` | Kanagawa Lotus (light) variant | T-043 | M |
 | - [ ] | T-055 | Verify all palettes pass validation | Run installer scanner in isolation (unit test or manual run) against all 10 palettes | T-044, T-045, T-046, T-047, T-048, T-049, T-050, T-051, T-052, T-053, T-054 | S |
 
 ### 5C — Tool Templates

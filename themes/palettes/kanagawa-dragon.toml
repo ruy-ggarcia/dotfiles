@@ -1,0 +1,45 @@
+[meta]
+name        = "Kanagawa Dragon"
+variant     = "dark"
+nvim_plugin = "rebelot/kanagawa.nvim"
+nvim_variant = "dragon"
+nvim_theme  = "kanagawa-dragon"
+
+[colors.core]
+background   = "#181616"
+foreground   = "#c5c9c5"
+cursor_bg    = "#8ba4b0"
+cursor_fg    = "#181616"
+selection_bg = "#393836"
+selection_fg = "#c5c9c5"
+url          = "#8ba4b0"
+
+[colors.ansi.normal]
+black   = "#282727"
+red     = "#c4746e"
+green   = "#87a987"
+yellow  = "#c4b28a"
+blue    = "#8ba4b0"
+magenta = "#8992a7"
+cyan    = "#8ea4a2"
+white   = "#a6a69c"
+
+[colors.ansi.bright]
+black   = "#625e5a"
+red     = "#c4746e"
+green   = "#8a9a7b"
+yellow  = "#c4b28a"
+blue    = "#8992a7"
+magenta = "#a292a3"
+cyan    = "#737c73"
+white   = "#c5c9c5"
+
+[colors.ui]
+border_active   = "#8ba4b0"
+border_inactive = "#625e5a"
+status_bg       = "#181616"
+status_fg       = "#c5c9c5"
+tab_active_bg   = "#393836"
+tab_active_fg   = "#c5c9c5"
+tab_inactive_bg = "#181616"
+tab_inactive_fg = "#625e5a"

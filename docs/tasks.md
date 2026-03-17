@@ -156,10 +156,10 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-045 | `catppuccin-mocha.toml` | All 36 keys (31 colors + 5 meta); source from official Catppuccin color spec | T-043 | M |
-| - [ ] | T-046 | `catppuccin-macchiato.toml` | Catppuccin Macchiato variant | T-043 | M |
-| - [ ] | T-047 | `catppuccin-frappe.toml` | Catppuccin Frappé variant | T-043 | M |
-| - [ ] | T-048 | `catppuccin-latte.toml` | Catppuccin Latte (light) variant; `meta.variant = "light"` | T-043 | M |
+| - [x] | T-045 | `catppuccin-mocha.toml` | All 36 keys (31 colors + 5 meta); source from official Catppuccin color spec | T-043 | M |
+| - [x] | T-046 | `catppuccin-macchiato.toml` | Catppuccin Macchiato variant | T-043 | M |
+| - [x] | T-047 | `catppuccin-frappe.toml` | Catppuccin Frappé variant | T-043 | M |
+| - [x] | T-048 | `catppuccin-latte.toml` | Catppuccin Latte (light) variant; `meta.variant = "light"` | T-043 | M |
 | - [x] | T-049 | `rose-pine.toml` | Rosé Pine Main variant | T-043 | M |
 | - [x] | T-050 | `rose-pine-moon.toml` | Rosé Pine Moon variant | T-043 | M |
 | - [x] | T-051 | `rose-pine-dawn.toml` | Rosé Pine Dawn (light) variant | T-043 | M |

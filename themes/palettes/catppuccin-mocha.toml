@@ -1,0 +1,45 @@
+[meta]
+name         = "Catppuccin Mocha"
+variant      = "dark"
+nvim_plugin  = "catppuccin/nvim"
+nvim_variant = "mocha"
+nvim_theme   = "catppuccin-mocha"
+
+[colors.core]
+background   = "#1e1e2e"
+foreground   = "#cdd6f4"
+cursor_bg    = "#f5e0dc"
+cursor_fg    = "#1e1e2e"
+selection_bg = "#585b70"
+selection_fg = "#cdd6f4"
+url          = "#74c7ec"
+
+[colors.ansi.normal]
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#cba6f7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
+
+[colors.ansi.bright]
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#89dceb"
+white   = "#cdd6f4"
+
+[colors.ui]
+border_active   = "#b4befe"
+border_inactive = "#45475a"
+status_bg       = "#181825"
+status_fg       = "#cdd6f4"
+tab_active_bg   = "#313244"
+tab_active_fg   = "#cdd6f4"
+tab_inactive_bg = "#181825"
+tab_inactive_fg = "#7f849c"

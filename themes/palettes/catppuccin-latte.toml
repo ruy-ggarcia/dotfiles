@@ -1,0 +1,45 @@
+[meta]
+name         = "Catppuccin Latte"
+variant      = "light"
+nvim_plugin  = "catppuccin/nvim"
+nvim_variant = "latte"
+nvim_theme   = "catppuccin-latte"
+
+[colors.core]
+background   = "#eff1f5"
+foreground   = "#4c4f69"
+cursor_bg    = "#dc8a78"
+cursor_fg    = "#eff1f5"
+selection_bg = "#acb0be"
+selection_fg = "#4c4f69"
+url          = "#209fb5"
+
+[colors.ansi.normal]
+black   = "#bcc0cc"
+red     = "#d20f39"
+green   = "#40a02b"
+yellow  = "#df8e1d"
+blue    = "#1e66f5"
+magenta = "#8839ef"
+cyan    = "#179299"
+white   = "#5c5f77"
+
+[colors.ansi.bright]
+black   = "#acb0be"
+red     = "#d20f39"
+green   = "#40a02b"
+yellow  = "#df8e1d"
+blue    = "#1e66f5"
+magenta = "#ea76cb"
+cyan    = "#04a5e5"
+white   = "#4c4f69"
+
+[colors.ui]
+border_active   = "#7287fd"
+border_inactive = "#bcc0cc"
+status_bg       = "#e6e9ef"
+status_fg       = "#4c4f69"
+tab_active_bg   = "#ccd0da"
+tab_active_fg   = "#4c4f69"
+tab_inactive_bg = "#e6e9ef"
+tab_inactive_fg = "#8c8fa1"

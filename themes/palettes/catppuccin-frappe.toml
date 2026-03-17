@@ -1,0 +1,45 @@
+[meta]
+name         = "Catppuccin Frappé"
+variant      = "dark"
+nvim_plugin  = "catppuccin/nvim"
+nvim_variant = "frappe"
+nvim_theme   = "catppuccin-frappe"
+
+[colors.core]
+background   = "#303446"
+foreground   = "#c6d0f5"
+cursor_bg    = "#f2d5cf"
+cursor_fg    = "#303446"
+selection_bg = "#626880"
+selection_fg = "#c6d0f5"
+url          = "#85c1dc"
+
+[colors.ansi.normal]
+black   = "#51576d"
+red     = "#e78284"
+green   = "#a6d189"
+yellow  = "#e5c890"
+blue    = "#8caaee"
+magenta = "#ca9ee6"
+cyan    = "#81c8be"
+white   = "#b5bfe2"
+
+[colors.ansi.bright]
+black   = "#626880"
+red     = "#e78284"
+green   = "#a6d189"
+yellow  = "#e5c890"
+blue    = "#8caaee"
+magenta = "#f4b8e4"
+cyan    = "#99d1db"
+white   = "#c6d0f5"
+
+[colors.ui]
+border_active   = "#babbf1"
+border_inactive = "#51576d"
+status_bg       = "#292c3c"
+status_fg       = "#c6d0f5"
+tab_active_bg   = "#414559"
+tab_active_fg   = "#c6d0f5"
+tab_inactive_bg = "#292c3c"
+tab_inactive_fg = "#838ba7"

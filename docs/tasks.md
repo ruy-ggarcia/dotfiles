@@ -91,9 +91,9 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-025 | Implement `generate_plan` | Create `installer/src/engine.rs` with `generate_plan(selection: &UserSelection, repo_root: &Path) -> Result<Plan>` — walks `home/` and `config/` subtrees of each selected module, produces `TemplateJob` for `.tera` files and `SymlinkJob` for static files; deduplicates packages | T-008, T-018, T-021 | L |
-| - [ ] | T-026 | Implement `execute_plan` | Add `execute_plan(plan: &Plan, theme: &Theme, pkg_mgr: &dyn PackageManager, repo_root: &Path) -> Result<()>` — calls package install → template render → symlink creation in sequence | T-025, T-014, T-018, T-021 | M |
-| - [ ] | T-027 | Unit test for `generate_plan` | Given a module with one static file and one `.tera` file, verify plan has 1 template job and 2 symlink jobs | T-025 | M |
+| - [x] | T-025 | Implement `generate_plan` | Create `installer/src/engine.rs` with `generate_plan(selection: &UserSelection, repo_root: &Path) -> Result<Plan>` — walks `home/` and `config/` subtrees of each selected module, produces `TemplateJob` for `.tera` files and `SymlinkJob` for static files; deduplicates packages | T-008, T-018, T-021 | L |
+| - [x] | T-026 | Implement `execute_plan` | Add `execute_plan(plan: &Plan, theme: &Theme, pkg_mgr: &dyn PackageManager, repo_root: &Path) -> Result<()>` — calls package install → template render → symlink creation in sequence | T-025, T-014, T-018, T-021 | M |
+| - [x] | T-027 | Unit test for `generate_plan` | Given a module with one static file and one `.tera` file, verify plan has 1 template job and 2 symlink jobs | T-025 | M |
 
 ### 2G — Wire in `main.rs` (hardcoded, no TUI)
 

@@ -30,7 +30,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
 | - [x] | T-001 | Initialize Cargo project | Run `cargo init --name dotfiles` in `installer/`; set `edition = "2021"` in `Cargo.toml` | — | S |
-| - [ ] | T-002 | Add Cargo dependencies | Add `anyhow`, `inquire`, `tera`, `toml`, `serde`, `serde_json`, `walkdir`, `chrono` to `Cargo.toml` | T-001 | S |
+| - [x] | T-002 | Add Cargo dependencies | Add `anyhow`, `inquire`, `tera`, `toml`, `serde`, `serde_json`, `walkdir`, `chrono` to `Cargo.toml` | T-001 | S |
 | - [ ] | T-003 | Create top-level directories | Create `modules/`, `themes/palettes/`, `fonts/`, `.rendered/` placeholder, `.github/workflows/` | T-001 | S |
 | - [x] | T-004 | Create `.gitignore` | Add entries: `.rendered/`, `target/`, `*.bak.*` | T-003 | S |
 | - [ ] | T-005 | Create sample `zsh` module | Create `modules/zsh/` with `packages.toml` (`macos = ["zsh"]`, `ubuntu = ["zsh"]`) and stub `home/.zshrc` | T-003 | S |

@@ -1,1 +1,14 @@
-# Font manifest — will be populated in M6
+[[fonts]]
+name = "MesloLGS Nerd Font"
+file = "MesloLGSNerdFont-Regular.ttf"
+url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.tar.xz"
+
+[[fonts]]
+name = "JetBrainsMono Nerd Font"
+file = "JetBrainsMonoNerdFont-Regular.ttf"
+url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+
+[[fonts]]
+name = "Iosevka Nerd Font"
+file = "IosevkaNerdFont-Regular.ttf"
+url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Iosevka.tar.xz"

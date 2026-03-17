@@ -24,8 +24,12 @@ pub fn load_schema(schema_path: &Path) -> Result<serde_json::Value> {
 pub fn scan_modules(modules_dir: &Path) -> Result<Vec<Module>> {
     let mut modules = Vec::new();
 
-    let read_dir = fs::read_dir(modules_dir)
-        .with_context(|| format!("failed to read modules directory: {}", modules_dir.display()))?;
+    let read_dir = fs::read_dir(modules_dir).with_context(|| {
+        format!(
+            "failed to read modules directory: {}",
+            modules_dir.display()
+        )
+    })?;
 
     for entry in read_dir {
         let entry = entry.with_context(|| "failed to read directory entry")?;
@@ -94,8 +98,12 @@ pub fn scan_modules(modules_dir: &Path) -> Result<Vec<Module>> {
 pub fn scan_themes(palettes_dir: &Path) -> Result<Vec<Theme>> {
     let mut themes = Vec::new();
 
-    let read_dir = fs::read_dir(palettes_dir)
-        .with_context(|| format!("failed to read palettes directory: {}", palettes_dir.display()))?;
+    let read_dir = fs::read_dir(palettes_dir).with_context(|| {
+        format!(
+            "failed to read palettes directory: {}",
+            palettes_dir.display()
+        )
+    })?;
 
     for entry in read_dir {
         let entry = entry.with_context(|| "failed to read directory entry")?;
@@ -132,15 +140,12 @@ pub fn scan_themes(palettes_dir: &Path) -> Result<Vec<Theme>> {
         flatten_toml(&parsed, "", &mut variables);
 
         // Theme name: meta.name key if present, otherwise filename without extension
-        let name = variables
-            .get("meta.name")
-            .cloned()
-            .unwrap_or_else(|| {
-                path.file_stem()
-                    .and_then(|s| s.to_str())
-                    .unwrap_or_default()
-                    .to_string()
-            });
+        let name = variables.get("meta.name").cloned().unwrap_or_else(|| {
+            path.file_stem()
+                .and_then(|s| s.to_str())
+                .unwrap_or_default()
+                .to_string()
+        });
 
         themes.push(Theme {
             name,
@@ -218,7 +223,7 @@ fn flatten_toml(value: &toml::Value, prefix: &str, out: &mut HashMap<String, Str
 }
 
 // ---------------------------------------------------------------------------
-// Tests (T-013)
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
@@ -228,7 +233,7 @@ mod tests {
     use tempfile::TempDir;
 
     // -----------------------------------------------------------------------
-    // T-013-1: scan_modules happy path
+    // scan_modules happy path
     // -----------------------------------------------------------------------
     #[test]
     fn test_scan_modules_happy_path() {
@@ -252,7 +257,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-013-2: scan_modules skips dirs without packages.toml
+    // scan_modules skips dirs without packages.toml
     // -----------------------------------------------------------------------
     #[test]
     fn test_scan_modules_missing_packages_toml() {
@@ -267,7 +272,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-013-3: scan_themes happy path
+    // scan_themes happy path
     // -----------------------------------------------------------------------
     #[test]
     fn test_scan_themes_happy_path() {
@@ -288,7 +293,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-013-4: scan_themes skips invalid TOML files
+    // scan_themes skips invalid TOML files
     // -----------------------------------------------------------------------
     #[test]
     fn test_scan_themes_invalid_toml() {
@@ -301,7 +306,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-012: load_schema
+    // load_schema
     // -----------------------------------------------------------------------
     #[test]
     fn test_load_schema_valid() {

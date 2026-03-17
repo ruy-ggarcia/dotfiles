@@ -121,14 +121,13 @@ pub fn get_package_manager() -> Result<Box<dyn PackageManager>> {
 }
 
 // ---------------------------------------------------------------------------
-// Tests (T-017) — written BEFORE implementation (RED phase)
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // T-017-1: get_package_manager() succeeds on macOS or Linux
     #[test]
     fn test_get_package_manager_returns_some() {
         let result = get_package_manager();
@@ -139,7 +138,6 @@ mod tests {
         );
     }
 
-    // T-017-2: is_available() returns true (brew expected on dev Mac)
     #[test]
     fn test_brew_or_apt_is_available() {
         let pm = get_package_manager().expect("should get a package manager");
@@ -149,7 +147,6 @@ mod tests {
         );
     }
 
-    // T-017-3: factory doesn't error on the current platform
     #[test]
     fn test_get_package_manager_os_detection() {
         // On macOS we expect Brew, on Linux we expect Apt.

@@ -124,7 +124,7 @@ fn plan_file(
     target: std::path::PathBuf,
     relative: &std::path::Path,
     rendered_root: &std::path::Path,
-    subtree: &str,         // "home" or "config"
+    subtree: &str, // "home" or "config"
     module_name: &str,
     templates: &mut Vec<TemplateJob>,
     symlinks: &mut Vec<SymlinkJob>,
@@ -190,7 +190,7 @@ pub fn execute_plan(plan: &Plan, theme: &Theme) -> Result<()> {
 }
 
 // ---------------------------------------------------------------------------
-// Tests (T-027)
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
@@ -203,7 +203,11 @@ mod tests {
     use crate::models::{Module, Theme, UserSelection};
 
     /// Helper: build a minimal Module pointing at a temp dir.
-    fn make_module(name: &str, path: std::path::PathBuf, packages_by_os: HashMap<String, Vec<String>>) -> Module {
+    fn make_module(
+        name: &str,
+        path: std::path::PathBuf,
+        packages_by_os: HashMap<String, Vec<String>>,
+    ) -> Module {
         Module {
             name: name.to_string(),
             path,
@@ -221,7 +225,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-027-1: static file in home/ → 1 SymlinkJob, 0 TemplateJobs
+    // static file in home/ → 1 SymlinkJob, 0 TemplateJobs
     // -----------------------------------------------------------------------
     #[test]
     fn test_generate_plan_static_file() {
@@ -242,7 +246,11 @@ mod tests {
 
         let plan = generate_plan(&selection, &repo_root).unwrap();
 
-        assert_eq!(plan.templates_to_render.len(), 0, "no template jobs for static file");
+        assert_eq!(
+            plan.templates_to_render.len(),
+            0,
+            "no template jobs for static file"
+        );
         assert_eq!(plan.symlinks_to_create.len(), 1, "exactly 1 symlink job");
 
         let job = &plan.symlinks_to_create[0];
@@ -255,7 +263,8 @@ mod tests {
         );
 
         // target should be $HOME/.testrc
-        let expected_target = std::path::PathBuf::from(std::env::var("HOME").unwrap()).join(".testrc");
+        let expected_target =
+            std::path::PathBuf::from(std::env::var("HOME").unwrap()).join(".testrc");
         assert_eq!(
             job.target_absolute, expected_target,
             "target should be $HOME/.testrc"
@@ -263,7 +272,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-027-2: .tera file in config/ → 1 TemplateJob + 1 SymlinkJob
+    // .tera file in config/ → 1 TemplateJob + 1 SymlinkJob
     // -----------------------------------------------------------------------
     #[test]
     fn test_generate_plan_tera_file() {
@@ -329,7 +338,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-027-3: packages are deduplicated across modules
+    // packages are deduplicated across modules
     // -----------------------------------------------------------------------
     #[test]
     fn test_generate_plan_deduplicates_packages() {
@@ -342,12 +351,18 @@ mod tests {
         let mod_a_dir = repo_root.join("modules").join("mod_a");
         fs::create_dir_all(&mod_a_dir).unwrap();
         let mut pkgs_a = HashMap::new();
-        pkgs_a.insert(os_id.to_string(), vec!["git".to_string(), "curl".to_string()]);
+        pkgs_a.insert(
+            os_id.to_string(),
+            vec!["git".to_string(), "curl".to_string()],
+        );
 
         let mod_b_dir = repo_root.join("modules").join("mod_b");
         fs::create_dir_all(&mod_b_dir).unwrap();
         let mut pkgs_b = HashMap::new();
-        pkgs_b.insert(os_id.to_string(), vec!["git".to_string(), "vim".to_string()]);
+        pkgs_b.insert(
+            os_id.to_string(),
+            vec!["git".to_string(), "vim".to_string()],
+        );
 
         let modules = vec![
             make_module("mod_a", mod_a_dir, pkgs_a),
@@ -367,12 +382,19 @@ mod tests {
             .iter()
             .filter(|p| p.as_str() == "git")
             .count();
-        assert_eq!(git_count, 1, "git should appear exactly once (deduplicated)");
+        assert_eq!(
+            git_count, 1,
+            "git should appear exactly once (deduplicated)"
+        );
 
         // All three unique packages should be present
         assert!(plan.packages_to_install.contains(&"git".to_string()));
         assert!(plan.packages_to_install.contains(&"curl".to_string()));
         assert!(plan.packages_to_install.contains(&"vim".to_string()));
-        assert_eq!(plan.packages_to_install.len(), 3, "should have exactly 3 unique packages");
+        assert_eq!(
+            plan.packages_to_install.len(),
+            3,
+            "should have exactly 3 unique packages"
+        );
     }
 }

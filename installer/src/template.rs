@@ -79,7 +79,7 @@ pub fn render_templates(jobs: &[TemplateJob], theme: &Theme) -> Result<()> {
         let rendered = Tera::one_off(&content, &context, false)
             .with_context(|| format!("failed to render template: {}", job.source.display()))?;
 
-        // Ensure parent directory exists (T-019)
+        // Ensure parent directory exists
         if let Some(parent) = job.destination.parent() {
             fs::create_dir_all(parent).with_context(|| {
                 format!(
@@ -91,7 +91,10 @@ pub fn render_templates(jobs: &[TemplateJob], theme: &Theme) -> Result<()> {
 
         // Write rendered output
         fs::write(&job.destination, &rendered).with_context(|| {
-            format!("failed to write rendered file: {}", job.destination.display())
+            format!(
+                "failed to write rendered file: {}",
+                job.destination.display()
+            )
         })?;
     }
 
@@ -99,7 +102,7 @@ pub fn render_templates(jobs: &[TemplateJob], theme: &Theme) -> Result<()> {
 }
 
 // ---------------------------------------------------------------------------
-// Tests (T-020)
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
@@ -108,7 +111,7 @@ mod tests {
     use tempfile::TempDir;
 
     // -----------------------------------------------------------------------
-    // T-020-1: basic rendering with variable substitution
+    // basic rendering with variable substitution
     // -----------------------------------------------------------------------
     #[test]
     fn test_render_template_basic() {
@@ -146,7 +149,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-020-2: creates parent directories if they don't exist
+    // creates parent directories if they don't exist
     // -----------------------------------------------------------------------
     #[test]
     fn test_render_template_creates_parent_dirs() {
@@ -180,7 +183,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-020-3: returns an error when a template variable is missing
+    // returns an error when a template variable is missing
     // -----------------------------------------------------------------------
     #[test]
     fn test_render_template_missing_variable() {

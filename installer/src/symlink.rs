@@ -17,7 +17,7 @@ pub fn process_symlinks(jobs: &[SymlinkJob]) -> Result<()> {
         let source = &job.source_absolute;
         let target = &job.target_absolute;
 
-        // Ensure parent directory of the target exists (T-023)
+        // Ensure parent directory of the target exists
         if let Some(parent) = target.parent() {
             fs::create_dir_all(parent).with_context(|| {
                 format!(
@@ -43,9 +43,8 @@ pub fn process_symlinks(jobs: &[SymlinkJob]) -> Result<()> {
             Ok(metadata) => {
                 if metadata.file_type().is_symlink() {
                     // Check where the existing symlink points
-                    let current_target = fs::read_link(target).with_context(|| {
-                        format!("failed to read symlink: {}", target.display())
-                    })?;
+                    let current_target = fs::read_link(target)
+                        .with_context(|| format!("failed to read symlink: {}", target.display()))?;
 
                     if current_target == *source {
                         // Case 2: Correct symlink already exists — skip (idempotent)
@@ -55,8 +54,7 @@ pub fn process_symlinks(jobs: &[SymlinkJob]) -> Result<()> {
 
                 // Case 3: Conflict — backup then create symlink
                 let timestamp = Local::now().format("%Y%m%d%H%M%S").to_string();
-                let backup_path =
-                    PathBuf::from(format!("{}.bak.{}", target.display(), timestamp));
+                let backup_path = PathBuf::from(format!("{}.bak.{}", target.display(), timestamp));
 
                 fs::rename(target, &backup_path).with_context(|| {
                     format!(
@@ -87,7 +85,7 @@ pub fn process_symlinks(jobs: &[SymlinkJob]) -> Result<()> {
 }
 
 // ---------------------------------------------------------------------------
-// Tests (T-024)
+// Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
@@ -97,7 +95,7 @@ mod tests {
     use tempfile::TempDir;
 
     // -----------------------------------------------------------------------
-    // T-024-1: creates a new symlink when nothing exists at target
+    // creates a new symlink when nothing exists at target
     // -----------------------------------------------------------------------
     #[test]
     fn test_symlink_creates_new() {
@@ -118,19 +116,13 @@ mod tests {
         process_symlinks(&jobs).unwrap();
 
         // Target should now be a symlink pointing to source
-        assert!(
-            target.exists(),
-            "target symlink should exist"
-        );
+        assert!(target.exists(), "target symlink should exist");
         let link_target = fs::read_link(&target).unwrap();
-        assert_eq!(
-            link_target, source,
-            "symlink should point to source"
-        );
+        assert_eq!(link_target, source, "symlink should point to source");
     }
 
     // -----------------------------------------------------------------------
-    // T-024-2: skips when correct symlink already exists (idempotent)
+    // skips when correct symlink already exists (idempotent)
     // -----------------------------------------------------------------------
     #[test]
     fn test_symlink_idempotent_skip() {
@@ -156,11 +148,9 @@ mod tests {
             .unwrap()
             .filter_map(|e| e.ok())
             .collect();
-        let backup_exists = entries.iter().any(|e| {
-            e.file_name()
-                .to_string_lossy()
-                .contains(".bak.")
-        });
+        let backup_exists = entries
+            .iter()
+            .any(|e| e.file_name().to_string_lossy().contains(".bak."));
         assert!(
             !backup_exists,
             "no backup should be created when symlink is already correct"
@@ -172,7 +162,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-024-3: backs up a conflicting regular file and creates the symlink
+    // backs up a conflicting regular file and creates the symlink
     // -----------------------------------------------------------------------
     #[test]
     fn test_symlink_conflict_backup() {
@@ -215,7 +205,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // T-024-4: backs up a symlink pointing elsewhere and redirects to new source
+    // backs up a symlink pointing elsewhere and redirects to new source
     // -----------------------------------------------------------------------
     #[test]
     fn test_symlink_wrong_symlink_backup() {
@@ -252,11 +242,14 @@ mod tests {
 
         // Target should now point to source_b
         let link_target = fs::read_link(&target).unwrap();
-        assert_eq!(link_target, source_b, "symlink should now point to source_b");
+        assert_eq!(
+            link_target, source_b,
+            "symlink should now point to source_b"
+        );
     }
 
     // -----------------------------------------------------------------------
-    // T-024-5: creates parent directories if they don't exist
+    // creates parent directories if they don't exist
     // -----------------------------------------------------------------------
     #[test]
     fn test_symlink_creates_parent_dirs() {

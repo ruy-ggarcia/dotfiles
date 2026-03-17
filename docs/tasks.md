@@ -245,3 +245,12 @@ All Milestone 2 engine tasks (T-010 through T-027) can be developed in parallel 
 | **M** | Medium | 1–3 hours — single-function implementation with tests |
 | **L** | Large | 3–8 hours — multi-part feature, non-trivial logic |
 | **XL** | Extra-Large | > 8 hours — multiple interconnected pieces or full subsystems |
+
+---
+
+## MVP+1: Post-Release Improvements
+
+| Status | ID | Title | Description | Priority |
+|--------|-----|-------|-------------|----------|
+| - [ ] | P-001 | Verbose symlink skip logging | Add explicit log output when symlinks are skipped during idempotent re-runs (e.g., `Skipped: ~/.zshrc (already correct)`) for better operator feedback | Low |
+

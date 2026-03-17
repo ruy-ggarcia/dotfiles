@@ -99,8 +99,8 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-028 | Integrate engine into `main.rs` | Load schema → scan modules → scan themes → hardcode `UserSelection` (first module, first theme) → generate plan → execute plan; wrap in `anyhow::Result` and print errors to stderr cleanly | T-010, T-011, T-025, T-026 | M |
-| - [ ] | T-029 | Smoke test engine end-to-end | Run `cargo run` in the repo — verify it scans `modules/zsh/`, renders nothing (no `.tera` files yet), creates `~/.zshrc` symlink successfully | T-028 | S |
+| - [x] | T-028 | Integrate engine into `main.rs` | Load schema → scan modules → scan themes → hardcode `UserSelection` (first module, first theme) → generate plan → execute plan; wrap in `anyhow::Result` and print errors to stderr cleanly | T-010, T-011, T-025, T-026 | M |
+| - [x] | T-029 | Smoke test engine end-to-end | Run `cargo run` in the repo — verify it scans `modules/zsh/`, renders nothing (no `.tera` files yet), creates `~/.zshrc` symlink successfully | T-028 | S |
 
 **Acceptance Criteria (M2):** Engine runs end-to-end with hardcoded selections; zsh symlink created; re-run is idempotent (no backup created second time).
 

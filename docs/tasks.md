@@ -65,10 +65,10 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-014 | Define `PackageManager` trait | Create `installer/src/package.rs` with `PackageManager` trait (`is_available`, `update_index`, `install`) and `get_package_manager() -> Result<Box<dyn PackageManager>>` factory | T-007 | M |
-| - [ ] | T-015 | Implement `Brew` | `is_available` checks for `brew` binary via `Command`; `install` runs `brew install <packages>` idempotently | T-014 | M |
-| - [ ] | T-016 | Implement `Apt` | `is_available` checks for `apt-get`; `update_index` runs `apt-get update`; `install` runs `apt-get install -y <packages>` | T-014 | M |
-| - [ ] | T-017 | Unit tests for OS detection | Test `get_package_manager` OS detection logic (mock `std::env::consts::OS`) | T-015, T-016 | M |
+| - [x] | T-014 | Define `PackageManager` trait | Create `installer/src/package.rs` with `PackageManager` trait (`is_available`, `update_index`, `install`) and `get_package_manager() -> Result<Box<dyn PackageManager>>` factory | T-007 | M |
+| - [x] | T-015 | Implement `Brew` | `is_available` checks for `brew` binary via `Command`; `install` runs `brew install <packages>` idempotently | T-014 | M |
+| - [x] | T-016 | Implement `Apt` | `is_available` checks for `apt-get`; `update_index` runs `apt-get update`; `install` runs `apt-get install -y <packages>` | T-014 | M |
+| - [x] | T-017 | Unit tests for OS detection | Test `get_package_manager` OS detection logic (mock `std::env::consts::OS`) | T-015, T-016 | M |
 
 ### 2D — Template Rendering
 

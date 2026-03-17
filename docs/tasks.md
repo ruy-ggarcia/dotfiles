@@ -56,10 +56,10 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-010 | Implement `scan_modules` | Create `installer/src/scanner.rs` with `scan_modules(repo_root: &Path) -> Result<Vec<Module>>` — reads every immediate subdirectory of `modules/`, parses `packages.toml` via `toml` crate, builds `Module` structs | T-008 | M |
-| - [ ] | T-011 | Implement `scan_themes` | Add `scan_themes(repo_root: &Path, schema: &serde_json::Value) -> Result<Vec<Theme>>` — reads all `.toml` files in `themes/palettes/`, parses palette variables as flat `HashMap<String, String>`, validates required keys against schema; warn + skip invalid palettes | T-008, T-012 | M |
-| - [ ] | T-012 | Implement `load_schema` | Add `load_schema(repo_root: &Path) -> Result<serde_json::Value>` to `scanner.rs` — reads `themes/schema.json` | T-008 | S |
-| - [ ] | T-013 | Unit tests for `scan_modules` | Happy path (zsh module), missing `packages.toml` (error or skip), unknown OS key (mark unsupported) | T-010 | M |
+| - [x] | T-010 | Implement `scan_modules` | Create `installer/src/scanner.rs` with `scan_modules(repo_root: &Path) -> Result<Vec<Module>>` — reads every immediate subdirectory of `modules/`, parses `packages.toml` via `toml` crate, builds `Module` structs | T-008 | M |
+| - [x] | T-011 | Implement `scan_themes` | Add `scan_themes(repo_root: &Path, schema: &serde_json::Value) -> Result<Vec<Theme>>` — reads all `.toml` files in `themes/palettes/`, parses palette variables as flat `HashMap<String, String>`, validates required keys against schema; warn + skip invalid palettes | T-008, T-012 | M |
+| - [x] | T-012 | Implement `load_schema` | Add `load_schema(repo_root: &Path) -> Result<serde_json::Value>` to `scanner.rs` — reads `themes/schema.json` | T-008 | S |
+| - [x] | T-013 | Unit tests for `scan_modules` | Happy path (zsh module), missing `packages.toml` (error or skip), unknown OS key (mark unsupported) | T-010 | M |
 
 ### 2C — Package Manager
 

@@ -188,7 +188,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-061 | Complete `modules/zsh/home/.zshrc` | Full Zsh config: Oh-My-Zsh or Prezto setup, aliases, PATH exports, plugin list; static file (no Tera) | T-005 | L |
+| - [x] | T-061 | Complete `modules/zsh/home/.zshrc` | Full Zsh config: Oh-My-Zsh or Prezto setup, aliases, PATH exports, plugin list; static file (no Tera) | T-005 | L |
 | - [ ] | T-062 | Complete Kitty module | `modules/kitty/packages.toml` and any additional static Kitty config files (font size, keybindings) alongside `kitty.conf.tera` | T-056, T-062 | M |
 | - [ ] | T-063 | Complete Alacritty module | `modules/alacritty/packages.toml` and static Alacritty config sections (font, window, scrolling) alongside the color template | T-057 | M |
 | - [ ] | T-064 | Complete Zellij module | `modules/zellij/packages.toml` and full `config.kdl.tera` with keybindings, default layout, plugin settings beyond just the theme block | T-058 | L |

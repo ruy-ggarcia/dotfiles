@@ -160,9 +160,9 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [ ] | T-046 | `catppuccin-macchiato.toml` | Catppuccin Macchiato variant | T-043 | M |
 | - [ ] | T-047 | `catppuccin-frappe.toml` | Catppuccin Frappé variant | T-043 | M |
 | - [ ] | T-048 | `catppuccin-latte.toml` | Catppuccin Latte (light) variant; `meta.variant = "light"` | T-043 | M |
-| - [ ] | T-049 | `rose-pine.toml` | Rosé Pine Main variant | T-043 | M |
-| - [ ] | T-050 | `rose-pine-moon.toml` | Rosé Pine Moon variant | T-043 | M |
-| - [ ] | T-051 | `rose-pine-dawn.toml` | Rosé Pine Dawn (light) variant | T-043 | M |
+| - [x] | T-049 | `rose-pine.toml` | Rosé Pine Main variant | T-043 | M |
+| - [x] | T-050 | `rose-pine-moon.toml` | Rosé Pine Moon variant | T-043 | M |
+| - [x] | T-051 | `rose-pine-dawn.toml` | Rosé Pine Dawn (light) variant | T-043 | M |
 | - [ ] | T-052 | `kanagawa-wave.toml` | Kanagawa Wave variant | T-043 | M |
 | - [ ] | T-053 | `kanagawa-dragon.toml` | Kanagawa Dragon variant | T-043 | M |
 | - [ ] | T-054 | `kanagawa-lotus.toml` | Kanagawa Lotus (light) variant | T-043 | M |

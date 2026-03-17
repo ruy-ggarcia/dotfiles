@@ -1,0 +1,45 @@
+[meta]
+name        = "Rosé Pine"
+variant     = "dark"
+nvim_plugin = "rose-pine/neovim"
+nvim_variant = "main"
+nvim_theme  = "rose-pine"
+
+[colors.core]
+background   = "#191724"
+foreground   = "#e0def4"
+cursor_bg    = "#ebbcba"
+cursor_fg    = "#191724"
+selection_bg = "#403d52"
+selection_fg = "#e0def4"
+url          = "#9ccfd8"
+
+[colors.ansi.normal]
+black   = "#26233a"
+red     = "#eb6f92"
+green   = "#31748f"
+yellow  = "#f6c177"
+blue    = "#9ccfd8"
+magenta = "#c4a7e7"
+cyan    = "#31748f"
+white   = "#e0def4"
+
+[colors.ansi.bright]
+black   = "#6e6a86"
+red     = "#eb6f92"
+green   = "#9ccfd8"
+yellow  = "#f6c177"
+blue    = "#31748f"
+magenta = "#c4a7e7"
+cyan    = "#9ccfd8"
+white   = "#e0def4"
+
+[colors.ui]
+border_active   = "#c4a7e7"
+border_inactive = "#524f67"
+status_bg       = "#1f1d2e"
+status_fg       = "#e0def4"
+tab_active_bg   = "#403d52"
+tab_active_fg   = "#e0def4"
+tab_inactive_bg = "#1f1d2e"
+tab_inactive_fg = "#6e6a86"

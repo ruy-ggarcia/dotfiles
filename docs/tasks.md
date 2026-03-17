@@ -34,7 +34,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | - [x] | T-003 | Create top-level directories | Create `modules/`, `themes/palettes/`, `fonts/`, `.rendered/` placeholder, `.github/workflows/` | T-001 | S |
 | - [x] | T-004 | Create `.gitignore` | Add entries: `.rendered/`, `target/`, `*.bak.*` | T-003 | S |
 | - [x] | T-005 | Create sample `zsh` module | Create `modules/zsh/` with `packages.toml` (`macos = ["zsh"]`, `ubuntu = ["zsh"]`) and stub `home/.zshrc` | T-003 | S |
-| - [ ] | T-006 | Create placeholder schema and manifest | Create empty `themes/schema.json` and `fonts/manifest.toml` so the directory structure is complete | T-003 | S |
+| - [x] | T-006 | Create placeholder schema and manifest | Create empty `themes/schema.json` and `fonts/manifest.toml` so the directory structure is complete | T-003 | S |
 | - [ ] | T-007 | Stub `main.rs` | Write stub `installer/src/main.rs` that prints "Dotfiles Installer" and exits — verifies `cargo build` is clean | T-002 | S |
 
 **Acceptance Criteria (M1):** `cargo build` succeeds; directory tree matches `ARCHITECTURE.md`; `modules/zsh/` is discoverable.

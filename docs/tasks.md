@@ -150,7 +150,7 @@ This document tracks all implementation tasks organized by milestone. Each miles
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
 | - [x] | T-043 | Write `themes/schema.json` | Full JSON Schema as specified in `design.md §6`: required sections `meta` (5 keys), `colors.core` (7), `colors.ansi.normal` (8), `colors.ansi.bright` (8), `colors.ui` (8); hex color pattern validation | T-006 | M |
-| - [ ] | T-044 | Update scanner schema validation | Validate against the full `schema.json` structure (use `jsonschema` crate or manual checks); reject palette with clear per-field error message | T-043, T-011 | M |
+| - [x] | T-044 | Update scanner schema validation | Validate against the full `schema.json` structure (use `jsonschema` crate or manual checks); reject palette with clear per-field error message | T-043, T-011 | M |
 
 ### 5B — Palette Files
 

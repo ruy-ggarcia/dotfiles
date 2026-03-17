@@ -74,9 +74,9 @@ This document tracks all implementation tasks organized by milestone. Each miles
 
 | Status | ID | Title | Description | Dependencies | Complexity |
 |--------|----|-------|-------------|--------------|------------|
-| - [ ] | T-018 | Implement `render_templates` | Create `installer/src/template.rs` with `render_templates(jobs: &[TemplateJob], theme: &Theme, rendered_dir: &Path) -> Result<()>` — initializes `Tera`, builds context from `theme.variables`, renders each job, writes output | T-008 | M |
-| - [ ] | T-019 | Parent directory creation | Add `create_dir_all` for each render destination in `template.rs` | T-018 | S |
-| - [ ] | T-020 | Unit tests for `render_templates` | Valid Tera template renders correctly; missing variable returns descriptive error | T-018 | M |
+| - [x] | T-018 | Implement `render_templates` | Create `installer/src/template.rs` with `render_templates(jobs: &[TemplateJob], theme: &Theme, rendered_dir: &Path) -> Result<()>` — initializes `Tera`, builds context from `theme.variables`, renders each job, writes output | T-008 | M |
+| - [x] | T-019 | Parent directory creation | Add `create_dir_all` for each render destination in `template.rs` | T-018 | S |
+| - [x] | T-020 | Unit tests for `render_templates` | Valid Tera template renders correctly; missing variable returns descriptive error | T-018 | M |
 
 ### 2E — Symlink Manager
 

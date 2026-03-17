@@ -651,6 +651,67 @@ nvim_variant = "dark"
     }
 
     // -----------------------------------------------------------------------
+    // T-055 — all 10 real palette files pass validate_palette()
+    // -----------------------------------------------------------------------
+    #[test]
+    fn test_all_palettes_pass_validation() {
+        // CARGO_MANIFEST_DIR = installer/ at test time; palettes live one level up.
+        let manifest_dir = std::env::var("CARGO_MANIFEST_DIR")
+            .expect("CARGO_MANIFEST_DIR must be set by cargo test");
+        let palettes_dir = std::path::Path::new(&manifest_dir).join("../themes/palettes");
+
+        let entries: Vec<_> = std::fs::read_dir(&palettes_dir)
+            .unwrap_or_else(|e| panic!("failed to read palettes dir {:?}: {e}", palettes_dir))
+            .filter_map(|e| e.ok())
+            .filter(|e| e.path().extension().and_then(|x| x.to_str()) == Some("toml"))
+            .collect();
+
+        assert_eq!(
+            entries.len(),
+            10,
+            "expected exactly 10 palette TOML files, found {}",
+            entries.len()
+        );
+
+        let mut passed = Vec::new();
+        let mut failed = Vec::new();
+
+        for entry in &entries {
+            let path = entry.path();
+            let filename = path.file_name().unwrap().to_string_lossy().to_string();
+            let content = std::fs::read_to_string(&path)
+                .unwrap_or_else(|e| panic!("failed to read {filename}: {e}"));
+            let parsed: toml::Value = toml::from_str(&content)
+                .unwrap_or_else(|e| panic!("{filename} is not valid TOML: {e}"));
+
+            match validate_palette(&parsed) {
+                Ok(()) => {
+                    println!("[PASS] {filename}");
+                    passed.push(filename);
+                }
+                Err(reason) => {
+                    eprintln!("[FAIL] {filename}: {reason}");
+                    failed.push((filename, reason));
+                }
+            }
+        }
+
+        if !failed.is_empty() {
+            let report = failed
+                .iter()
+                .map(|(f, r)| format!("  {f}: {r}"))
+                .collect::<Vec<_>>()
+                .join("\n");
+            panic!("{} palette(s) failed validation:\n{report}", failed.len());
+        }
+
+        println!("All {} palettes passed validation:", passed.len());
+        for name in &passed {
+            println!("  ✓ {name}");
+        }
+    }
+
+    // -----------------------------------------------------------------------
     // is_hex_color helper
     // -----------------------------------------------------------------------
     #[test]

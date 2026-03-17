@@ -1,1 +1,128 @@
-{}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Dotfiles Theme Palette",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "colors"],
+  "$defs": {
+    "hex-color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    }
+  },
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "variant", "nvim_theme", "nvim_plugin", "nvim_variant"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string",
+          "enum": ["dark", "light"]
+        },
+        "nvim_theme": {
+          "type": "string"
+        },
+        "nvim_plugin": {
+          "type": "string"
+        },
+        "nvim_variant": {
+          "type": "string"
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["core", "ansi", "ui"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "background",
+            "foreground",
+            "cursor_bg",
+            "cursor_fg",
+            "selection_bg",
+            "selection_fg",
+            "url"
+          ],
+          "properties": {
+            "background":   { "$ref": "#/$defs/hex-color" },
+            "foreground":   { "$ref": "#/$defs/hex-color" },
+            "cursor_bg":    { "$ref": "#/$defs/hex-color" },
+            "cursor_fg":    { "$ref": "#/$defs/hex-color" },
+            "selection_bg": { "$ref": "#/$defs/hex-color" },
+            "selection_fg": { "$ref": "#/$defs/hex-color" },
+            "url":          { "$ref": "#/$defs/hex-color" }
+          }
+        },
+        "ansi": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["normal", "bright"],
+          "properties": {
+            "normal": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"],
+              "properties": {
+                "black":   { "$ref": "#/$defs/hex-color" },
+                "red":     { "$ref": "#/$defs/hex-color" },
+                "green":   { "$ref": "#/$defs/hex-color" },
+                "yellow":  { "$ref": "#/$defs/hex-color" },
+                "blue":    { "$ref": "#/$defs/hex-color" },
+                "magenta": { "$ref": "#/$defs/hex-color" },
+                "cyan":    { "$ref": "#/$defs/hex-color" },
+                "white":   { "$ref": "#/$defs/hex-color" }
+              }
+            },
+            "bright": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"],
+              "properties": {
+                "black":   { "$ref": "#/$defs/hex-color" },
+                "red":     { "$ref": "#/$defs/hex-color" },
+                "green":   { "$ref": "#/$defs/hex-color" },
+                "yellow":  { "$ref": "#/$defs/hex-color" },
+                "blue":    { "$ref": "#/$defs/hex-color" },
+                "magenta": { "$ref": "#/$defs/hex-color" },
+                "cyan":    { "$ref": "#/$defs/hex-color" },
+                "white":   { "$ref": "#/$defs/hex-color" }
+              }
+            }
+          }
+        },
+        "ui": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "border_active",
+            "border_inactive",
+            "status_bg",
+            "status_fg",
+            "tab_active_bg",
+            "tab_active_fg",
+            "tab_inactive_bg",
+            "tab_inactive_fg"
+          ],
+          "properties": {
+            "border_active":   { "$ref": "#/$defs/hex-color" },
+            "border_inactive": { "$ref": "#/$defs/hex-color" },
+            "status_bg":       { "$ref": "#/$defs/hex-color" },
+            "status_fg":       { "$ref": "#/$defs/hex-color" },
+            "tab_active_bg":   { "$ref": "#/$defs/hex-color" },
+            "tab_active_fg":   { "$ref": "#/$defs/hex-color" },
+            "tab_inactive_bg": { "$ref": "#/$defs/hex-color" },
+            "tab_inactive_fg": { "$ref": "#/$defs/hex-color" }
+          }
+        }
+      }
+    }
+  }
+}

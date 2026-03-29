@@ -26,9 +26,9 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
     use crate::{symlink, template};
 
     for module in &plan.shells {
-        let (template_path, dest_name) = match module.shell {
-            Shell::Zsh  => ("modules/zsh/home/.zshrc.tera",  ".zshrc"),
-            Shell::Bash => ("modules/bash/home/.bashrc.tera", ".bashrc"),
+        let (template_path, prompt_name, rc_name) = match module.shell {
+            Shell::Zsh  => ("modules/zsh/home/prompt.zsh.tera",  "prompt.zsh",  ".zshrc"),
+            Shell::Bash => ("modules/bash/home/prompt.bash.tera", "prompt.bash", ".bashrc"),
         };
 
         let template_str = match std::fs::read_to_string(template_path) {
@@ -50,15 +50,15 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
             Err(e) => { eprintln!("Render error for {template_path}: {e}"); continue; }
         };
 
-        let out_file = output_dir.join(dest_name);
-        if let Err(e) = std::fs::write(&out_file, &rendered) {
-            eprintln!("Write error {}: {e}", out_file.display()); continue;
+        let prompt_file = output_dir.join(prompt_name);
+        if let Err(e) = std::fs::write(&prompt_file, &rendered) {
+            eprintln!("Write error {}: {e}", prompt_file.display()); continue;
         }
 
         let home = std::env::var("HOME").unwrap_or_default();
-        let dest = std::path::Path::new(&home).join(dest_name);
-        if let Err(e) = symlink::create_symlink(&out_file, &dest) {
-            eprintln!("Symlink error: {e}");
+        let rc_path = std::path::Path::new(&home).join(rc_name);
+        if let Err(e) = symlink::inject_source_line(&rc_path, &prompt_file) {
+            eprintln!("RC inject error: {e}");
         }
     }
 }

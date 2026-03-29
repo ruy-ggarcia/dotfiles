@@ -15,7 +15,7 @@ The first working product. A user on MacOS can run the binary, answer a few ques
 - Interactive TUI: tool selection, theme selection, Nerd Font selection
 - Apply selected theme to shell configuration via Tera templates
 - Detect Nerd Fonts already installed on the system
-- Idempotent execution — re-running produces the same result; conflicting files are backed up before replacement
+- Idempotent execution — re-running produces the same result; shell rc files are never replaced (source guard injection); other conflicting config files are backed up before replacement
 - MacOS support (x86_64 and aarch64)
 
 ---

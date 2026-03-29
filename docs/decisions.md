@@ -68,3 +68,10 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Ubuntu is the only P0 Linux distribution. Other distributions (Arch, Fedora) may be added later.
 - **Rationale:** Pragmatic scoping. Ubuntu covers the most common server and desktop Linux use case. The trait-based detection approach makes adding new distros straightforward in future versions.
 
+### D9: Shell RC Injection — Source Guard
+
+- **Date:** 2026-03-29
+- **Status:** Accepted
+- **Context:** The installer previously replaced `~/.zshrc` and `~/.bashrc` entirely via symlinks, destroying any existing user content (aliases, exports, tool initialisers). This violates the zero-side-effects requirement. Three alternatives were evaluated: source guard (append one idempotent source line), managed block (delimited replace), and full ownership with escape hatch. See [ADR-003](adrs/ADR-003-shell-rc-injection.md) for full analysis.
+- **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
+- **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.

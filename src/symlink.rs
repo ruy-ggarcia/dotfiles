@@ -1,5 +1,26 @@
 use std::path::Path;
 
+/// Appends a guarded `source` line to an rc file (e.g. ~/.zshrc).
+/// Idempotent: does nothing if the prompt path already appears in the file.
+/// Creates the rc file if it does not exist.
+pub fn inject_source_line(rc_path: &Path, prompt_path: &Path) -> std::io::Result<()> {
+    let prompt_str = prompt_path.to_string_lossy();
+    let existing = std::fs::read_to_string(rc_path).unwrap_or_default();
+    if existing.contains(prompt_str.as_ref()) {
+        return Ok(());
+    }
+    use std::io::Write;
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(rc_path)?;
+    writeln!(file, "\n# dotfiles managed — do not remove")?;
+    writeln!(file, r#"[[ -f "{prompt_str}" ]] && source "{prompt_str}""#)?;
+    Ok(())
+}
+
+// FIXME: Used by non-shell modules (Kitty, Alacritty, Zellij, etc). Remove at M4.
+#[allow(dead_code)]
 pub fn create_symlink(src: &Path, dest: &Path) -> std::io::Result<()> {
     if dest.symlink_metadata().is_ok() {
         if dest.is_symlink() {
@@ -24,6 +45,45 @@ pub fn create_symlink(src: &Path, dest: &Path) -> std::io::Result<()> {
 mod tests {
     use super::*;
     use tempfile::TempDir;
+
+    #[test]
+    fn test_inject_source_line_appends_when_absent() {
+        let dir = TempDir::new().unwrap();
+        let rc = dir.path().join(".zshrc");
+        std::fs::write(&rc, "export FOO=bar\n").unwrap();
+        let prompt = dir.path().join("prompt.zsh");
+
+        inject_source_line(&rc, &prompt).unwrap();
+
+        let content = std::fs::read_to_string(&rc).unwrap();
+        assert!(content.contains(&*prompt.to_string_lossy()));
+    }
+
+    #[test]
+    fn test_inject_source_line_idempotent() {
+        let dir = TempDir::new().unwrap();
+        let rc = dir.path().join(".zshrc");
+        let prompt = dir.path().join("prompt.zsh");
+
+        inject_source_line(&rc, &prompt).unwrap();
+        let content_after_first = std::fs::read_to_string(&rc).unwrap();
+
+        inject_source_line(&rc, &prompt).unwrap();
+        let content_after_second = std::fs::read_to_string(&rc).unwrap();
+
+        assert_eq!(content_after_first, content_after_second);
+    }
+
+    #[test]
+    fn test_inject_source_line_creates_rc_if_missing() {
+        let dir = TempDir::new().unwrap();
+        let rc = dir.path().join(".zshrc");
+        let prompt = dir.path().join("prompt.zsh");
+
+        inject_source_line(&rc, &prompt).unwrap();
+
+        assert!(rc.exists());
+    }
 
     #[test]
     fn test_create_symlink_creates_link() {

@@ -1,0 +1,45 @@
+[meta]
+name        = "Rosé Pine Moon"
+variant     = "dark"
+nvim_plugin = "rose-pine/neovim"
+nvim_variant = "moon"
+nvim_theme  = "rose-pine-moon"
+
+[colors.core]
+background   = "#232136"
+foreground   = "#e0def4"
+cursor_bg    = "#ea9a97"
+cursor_fg    = "#232136"
+selection_bg = "#44415a"
+selection_fg = "#e0def4"
+url          = "#9ccfd8"
+
+[colors.ansi.normal]
+black   = "#393552"
+red     = "#eb6f92"
+green   = "#3e8fb0"
+yellow  = "#f6c177"
+blue    = "#9ccfd8"
+magenta = "#c4a7e7"
+cyan    = "#3e8fb0"
+white   = "#e0def4"
+
+[colors.ansi.bright]
+black   = "#6e6a86"
+red     = "#eb6f92"
+green   = "#9ccfd8"
+yellow  = "#f6c177"
+blue    = "#3e8fb0"
+magenta = "#c4a7e7"
+cyan    = "#9ccfd8"
+white   = "#e0def4"
+
+[colors.ui]
+border_active   = "#c4a7e7"
+border_inactive = "#56526e"
+status_bg       = "#2a273f"
+status_fg       = "#e0def4"
+tab_active_bg   = "#44415a"
+tab_active_fg   = "#e0def4"
+tab_inactive_bg = "#2a273f"
+tab_inactive_fg = "#6e6a86"

@@ -1,0 +1,3 @@
+[packages]
+macos = ["alacritty"]
+ubuntu = ["alacritty"]

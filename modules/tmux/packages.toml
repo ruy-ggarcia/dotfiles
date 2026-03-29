@@ -1,0 +1,3 @@
+[packages]
+macos = ["tmux"]
+ubuntu = ["tmux"]

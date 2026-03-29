@@ -1,0 +1,5 @@
+{
+  "$schema": "https://opencode.ai/config.schema.json",
+  "theme": "catppuccin-mocha",
+  "editor": "nvim"
+}

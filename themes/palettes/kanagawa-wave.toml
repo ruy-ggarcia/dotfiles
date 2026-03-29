@@ -1,0 +1,45 @@
+[meta]
+name        = "Kanagawa Wave"
+variant     = "dark"
+nvim_plugin = "rebelot/kanagawa.nvim"
+nvim_variant = "wave"
+nvim_theme  = "kanagawa-wave"
+
+[colors.core]
+background   = "#1f1f28"
+foreground   = "#dcd7ba"
+cursor_bg    = "#7e9cd8"
+cursor_fg    = "#1f1f28"
+selection_bg = "#363646"
+selection_fg = "#dcd7ba"
+url          = "#7fb4ca"
+
+[colors.ansi.normal]
+black   = "#2a2a37"
+red     = "#e46876"
+green   = "#98bb6c"
+yellow  = "#c0a36e"
+blue    = "#7e9cd8"
+magenta = "#957fb8"
+cyan    = "#7aa89f"
+white   = "#c8c093"
+
+[colors.ansi.bright]
+black   = "#54546d"
+red     = "#ff5d62"
+green   = "#98bb6c"
+yellow  = "#e6c384"
+blue    = "#7fb4ca"
+magenta = "#938aa9"
+cyan    = "#6a9589"
+white   = "#dcd7ba"
+
+[colors.ui]
+border_active   = "#7e9cd8"
+border_inactive = "#54546d"
+status_bg       = "#1f1f28"
+status_fg       = "#dcd7ba"
+tab_active_bg   = "#363646"
+tab_active_fg   = "#dcd7ba"
+tab_inactive_bg = "#1f1f28"
+tab_inactive_fg = "#54546d"

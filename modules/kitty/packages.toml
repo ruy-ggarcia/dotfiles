@@ -1,0 +1,3 @@
+[packages]
+macos = ["kitty"]
+ubuntu = ["kitty"]

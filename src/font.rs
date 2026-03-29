@@ -26,6 +26,21 @@ pub fn scan_fonts(dirs: &[&Path]) -> Vec<String> {
     result
 }
 
+pub fn font_dirs(home: &str) -> Vec<std::path::PathBuf> {
+    if cfg!(target_os = "linux") {
+        vec![
+            std::path::PathBuf::from(home).join(".local/share/fonts"),
+            std::path::PathBuf::from("/usr/share/fonts"),
+            std::path::PathBuf::from("/usr/local/share/fonts"),
+        ]
+    } else {
+        vec![
+            std::path::PathBuf::from(home).join("Library/Fonts"),
+            std::path::PathBuf::from("/Library/Fonts"),
+        ]
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -90,5 +105,30 @@ mod tests {
         make_file(&dir, "FooNerdFont-Regular.otf");
         let result = scan_fonts(&[dir.path()]);
         assert_eq!(result, vec!["Foo Nerd Font"]);
+    }
+
+    #[test]
+    fn test_font_dirs_never_empty() {
+        let dirs = font_dirs("/home/user");
+        assert!(!dirs.is_empty());
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn test_font_dirs_macos_contains_library_fonts() {
+        let dirs = font_dirs("/Users/testuser");
+        let paths: Vec<String> = dirs.iter().map(|p| p.to_string_lossy().to_string()).collect();
+        assert!(paths.iter().any(|p| p.contains("Library/Fonts")));
+        assert!(!paths.iter().any(|p| p.contains(".local/share/fonts")));
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn test_font_dirs_linux_contains_local_share_fonts() {
+        let dirs = font_dirs("/home/testuser");
+        let paths: Vec<String> = dirs.iter().map(|p| p.to_string_lossy().to_string()).collect();
+        assert!(paths.iter().any(|p| p.contains(".local/share/fonts")));
+        assert!(paths.iter().any(|p| p == "/usr/share/fonts"));
+        assert!(!paths.iter().any(|p| p.contains("Library/Fonts")));
     }
 }

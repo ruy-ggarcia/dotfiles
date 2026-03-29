@@ -75,3 +75,11 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Context:** The installer previously replaced `~/.zshrc` and `~/.bashrc` entirely via symlinks, destroying any existing user content (aliases, exports, tool initialisers). This violates the zero-side-effects requirement. Three alternatives were evaluated: source guard (append one idempotent source line), managed block (delimited replace), and full ownership with escape hatch. See [ADR-003](adrs/ADR-003-shell-rc-injection.md) for full analysis.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
+
+### D10: Platform Detection — Compile-time `cfg!(target_os)`
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** M2 requires platform-specific font directory resolution (macOS vs Linux). Two approaches were considered: (1) `std::env::consts::OS` — runtime string comparison, same binary on all platforms; (2) `cfg!(target_os)` — compile-time boolean, dead branches eliminated by the compiler.
+- **Decision:** Use `cfg!(target_os = "linux")` (and the implicit macOS fallback) in `font::font_dirs()`.
+- **Rationale:** Compile-time guards are idiomatic Rust for platform branching. Dead code is eliminated at compile time. A typo in the OS string produces a compiler error rather than a silent runtime bug. The cost — platform-specific branches cannot be tested from the other platform — is acceptable since font directory paths are not testable across platforms anyway.

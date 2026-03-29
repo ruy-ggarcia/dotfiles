@@ -1,15 +1,14 @@
 mod font;
 mod models;
 mod scanner;
+mod tui;
 
 use std::path::Path;
 
-use models::Shell;
+use models::{Shell, UserSelection};
 use scanner::scan_shells;
 
-fn main() {
-    println!("dotfiles v{}", env!("CARGO_PKG_VERSION"));
-
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let entries = [
         (Shell::Bash, Path::new("/bin/bash")),
         (Shell::Bash, Path::new("/usr/bin/bash")),
@@ -17,17 +16,20 @@ fn main() {
         (Shell::Zsh, Path::new("/usr/bin/zsh")),
     ];
 
-    let modules = scan_shells(&entries);
-
-    for module in &modules {
-        println!("detected shell: {:?}", module.shell);
-    }
+    let detected_shells = scan_shells(&entries);
 
     let home = std::env::var("HOME").unwrap_or_default();
     let home_fonts = std::path::PathBuf::from(&home).join("Library/Fonts");
-    let fonts = font::scan_fonts(&[
+    let detected_fonts = font::scan_fonts(&[
         home_fonts.as_path(),
         Path::new("/Library/Fonts"),
     ]);
-    println!("Detected fonts: {:?}", fonts);
+
+    let _selection = UserSelection {
+        shells: tui::select_shells(detected_shells)?,
+        font: tui::select_font(detected_fonts)?,
+        font_size: tui::select_font_size()?,
+    };
+
+    Ok(())
 }

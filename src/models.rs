@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Shell {
     Bash,
@@ -9,11 +11,18 @@ pub struct Module {
     pub shell: Shell,
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub struct Theme {
+    pub name: String,
+    pub colors: HashMap<String, String>,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct UserSelection {
     pub shells: Vec<Module>,
     pub font: String,
     pub font_size: u8,
+    pub theme: Theme,
 }
 
 #[derive(Debug)]
@@ -21,11 +30,43 @@ pub struct Plan {
     pub shells: Vec<Module>,
     pub font: String,
     pub font_size: u8,
+    pub theme: Theme,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn make_theme(name: &str) -> Theme {
+        let mut colors = HashMap::new();
+        colors.insert("base".to_string(), "#24273a".to_string());
+        colors.insert("text".to_string(), "#cad3f5".to_string());
+        colors.insert("accent".to_string(), "#8aadf4".to_string());
+        colors.insert("surface".to_string(), "#363a4f".to_string());
+        colors.insert("overlay".to_string(), "#6e738d".to_string());
+        colors.insert("name".to_string(), name.to_string());
+        Theme {
+            name: name.to_string(),
+            colors,
+        }
+    }
+
+    #[test]
+    fn test_theme_stores_name() {
+        let theme = make_theme("Catppuccin Macchiato");
+        assert_eq!(theme.name, "Catppuccin Macchiato");
+    }
+
+    #[test]
+    fn test_theme_stores_colors() {
+        let mut colors: HashMap<String, String> = HashMap::new();
+        colors.insert("base".to_string(), "#24273a".to_string());
+        let theme = Theme {
+            name: "Test".to_string(),
+            colors: colors.clone(),
+        };
+        assert_eq!(theme.colors, colors);
+    }
 
     #[test]
     fn test_user_selection_stores_shells() {
@@ -34,6 +75,7 @@ mod tests {
             shells: shells.clone(),
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         assert_eq!(sel.shells, shells);
     }
@@ -44,6 +86,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         assert_eq!(sel.font, "Hack Nerd Font");
     }
@@ -54,6 +97,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 14,
+            theme: make_theme("Test"),
         };
         assert_eq!(sel.font_size, 14u8);
     }
@@ -64,6 +108,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         let _ = format!("{:?}", sel);
     }
@@ -75,6 +120,7 @@ mod tests {
             shells: shells.clone(),
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         assert_eq!(plan.shells, shells);
     }
@@ -85,6 +131,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         assert_eq!(plan.font, "Hack Nerd Font");
     }
@@ -95,6 +142,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 14,
+            theme: make_theme("Test"),
         };
         assert_eq!(plan.font_size, 14u8);
     }
@@ -105,6 +153,7 @@ mod tests {
             shells: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
+            theme: make_theme("Test"),
         };
         let _ = format!("{:?}", plan);
     }
@@ -115,11 +164,13 @@ mod tests {
             shells: vec![Module { shell: Shell::Bash }],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,
+            theme: make_theme("Test"),
         };
         let b = UserSelection {
             shells: vec![Module { shell: Shell::Bash }],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,
+            theme: make_theme("Test"),
         };
         assert_eq!(a, b);
     }

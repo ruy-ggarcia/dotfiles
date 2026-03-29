@@ -1,0 +1,6 @@
+name    = "Kanagawa Dragon"
+base    = "#181616"
+text    = "#c5c9c5"
+accent  = "#7fb4ca"
+surface = "#282727"
+overlay = "#8a9a7b"

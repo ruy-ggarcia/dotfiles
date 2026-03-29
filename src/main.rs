@@ -9,7 +9,7 @@ mod tui;
 use std::path::Path;
 
 use models::{Shell, UserSelection};
-use scanner::scan_shells;
+use scanner::{scan_shells, scan_themes};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let entries = [
@@ -28,10 +28,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Path::new("/Library/Fonts"),
     ]);
 
+    let themes = scan_themes(std::path::Path::new("themes"));
+
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
         font: tui::select_font(detected_fonts)?,
         font_size: tui::select_font_size()?,
+        theme: tui::select_theme(themes)?,
     };
 
     let plan = engine::generate_plan(selection);

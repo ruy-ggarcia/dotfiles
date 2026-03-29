@@ -1,3 +1,4 @@
+mod engine;
 mod font;
 mod models;
 mod scanner;
@@ -25,11 +26,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Path::new("/Library/Fonts"),
     ]);
 
-    let _selection = UserSelection {
+    let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
         font: tui::select_font(detected_fonts)?,
         font_size: tui::select_font_size()?,
     };
+
+    let plan = engine::generate_plan(selection);
+    engine::print_summary(&plan);
 
     Ok(())
 }

@@ -21,7 +21,7 @@ pub fn validate_theme(toml_str: &str) -> Result<Theme, String> {
         .parse()
         .map_err(|e| format!("TOML parse error: {e}"))?;
 
-    let required_keys = ["name", "base", "text", "accent", "surface", "overlay"];
+    let required_keys = ["name", "base", "text", "accent", "surface", "overlay", "success", "error"];
     for key in &required_keys {
         match table.get(*key) {
             Some(toml::Value::String(_)) => {}
@@ -75,7 +75,7 @@ mod tests {
     use super::*;
     use std::path::Path;
 
-    const VALID_TOML: &str = "name = \"Test Theme\"\nbase = \"#24273a\"\ntext = \"#cad3f5\"\naccent = \"#8aadf4\"\nsurface = \"#363a4f\"\noverlay = \"#6e738d\"\n";
+    const VALID_TOML: &str = "name = \"Test Theme\"\nbase = \"#24273a\"\ntext = \"#cad3f5\"\naccent = \"#8aadf4\"\nsurface = \"#363a4f\"\noverlay = \"#6e738d\"\nsuccess = \"#a6da95\"\nerror = \"#ed8796\"\n";
 
     #[test]
     fn test_module_shell_debug_format() {
@@ -152,7 +152,7 @@ mod tests {
     fn test_scan_themes_finds_toml_files() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("a.toml"), VALID_TOML).unwrap();
-        std::fs::write(dir.path().join("b.toml"), "name = \"Second Theme\"\nbase = \"#181616\"\ntext = \"#c5c9c5\"\naccent = \"#7fb4ca\"\nsurface = \"#282727\"\noverlay = \"#8a9a7b\"\n").unwrap();
+        std::fs::write(dir.path().join("b.toml"), "name = \"Second Theme\"\nbase = \"#181616\"\ntext = \"#c5c9c5\"\naccent = \"#7fb4ca\"\nsurface = \"#282727\"\noverlay = \"#8a9a7b\"\nsuccess = \"#98bb6c\"\nerror = \"#c34043\"\n").unwrap();
         let themes = scan_themes(dir.path());
         assert_eq!(themes.len(), 2);
     }

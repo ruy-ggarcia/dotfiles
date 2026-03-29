@@ -1,4 +1,6 @@
-use crate::models::{Plan, UserSelection};
+use std::path::Path;
+
+use crate::models::{Plan, Shell, UserSelection};
 
 pub fn generate_plan(selection: UserSelection) -> Plan {
     Plan {
@@ -15,6 +17,44 @@ pub fn print_summary(plan: &Plan) {
     }
     println!("  · Font: {} {}pt", plan.font, plan.font_size);
     println!("==================================");
+}
+
+pub fn execute_plan(plan: &Plan, output_dir: &Path) {
+    use std::collections::HashMap;
+    use crate::{symlink, template};
+
+    for module in &plan.shells {
+        let (template_path, dest_name) = match module.shell {
+            Shell::Zsh  => ("modules/zsh/home/.zshrc.tera",  ".zshrc"),
+            Shell::Bash => ("modules/bash/home/.bashrc.tera", ".bashrc"),
+        };
+
+        let template_str = match std::fs::read_to_string(template_path) {
+            Ok(s) => s,
+            Err(e) => { eprintln!("Cannot read {template_path}: {e}"); continue; }
+        };
+
+        let mut vars = HashMap::new();
+        vars.insert("font_family", plan.font.as_str());
+        let size_str = plan.font_size.to_string();
+        vars.insert("font_size", size_str.as_str());
+
+        let rendered = match template::render(&template_str, &vars) {
+            Ok(s) => s,
+            Err(e) => { eprintln!("Render error for {template_path}: {e}"); continue; }
+        };
+
+        let out_file = output_dir.join(dest_name);
+        if let Err(e) = std::fs::write(&out_file, &rendered) {
+            eprintln!("Write error {}: {e}", out_file.display()); continue;
+        }
+
+        let home = std::env::var("HOME").unwrap_or_default();
+        let dest = std::path::Path::new(&home).join(dest_name);
+        if let Err(e) = symlink::create_symlink(&out_file, &dest) {
+            eprintln!("Symlink error: {e}");
+        }
+    }
 }
 
 #[cfg(test)]

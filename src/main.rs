@@ -8,10 +8,27 @@ mod tui;
 
 use std::path::Path;
 
+use inquire::InquireError;
 use models::{Shell, UserSelection};
 use scanner::{scan_shells, scan_themes};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
+    if let Err(e) = run() {
+        match e.downcast_ref::<InquireError>() {
+            Some(InquireError::OperationCanceled) | Some(InquireError::OperationInterrupted) => {
+                print!("\r\x1b[2K");
+                println!("Setup canceled by user.");
+                std::process::exit(0)
+            }
+            _ => {
+                eprintln!("Error: {e}");
+                std::process::exit(1);
+            }
+        }
+    }
+}
+
+fn run() -> Result<(), Box<dyn std::error::Error>> {
     let entries = [
         (Shell::Bash, Path::new("/bin/bash")),
         (Shell::Bash, Path::new("/usr/bin/bash")),

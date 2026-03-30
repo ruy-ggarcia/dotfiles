@@ -76,6 +76,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
 
+### D14: macOS Gatekeeper — Quarantine Removal in install.sh
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** macOS Gatekeeper quarantines binaries downloaded from the internet, blocking execution with a security dialog. Code signing and notarization require an Apple Developer Program membership ($99/year). The tool targets developers who are comfortable with CLI installers.
+- **Decision:** Run `xattr -d com.apple.quarantine` on the binary as part of `install.sh`, immediately after download and before the user interacts with it.
+- **Rationale:** The install script already runs with user consent (`curl | bash`). Removing the quarantine attribute within the same script is transparent and avoids user friction. This is the same pattern used by Homebrew-installed formulae. Code signing remains a future consideration if the user base expands beyond developers.
+
 ### D13: Cross-Compilation Tooling — `cargo-zigbuild`
 
 - **Date:** 2026-03-30

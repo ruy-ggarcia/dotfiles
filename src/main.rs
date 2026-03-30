@@ -14,6 +14,15 @@ use models::{Font, Shell, TerminalEmulator, UserSelection};
 use scanner::{scan_installed_themes, scan_shells, scan_terminal_emulators, seed_default_themes};
 
 fn main() {
+    if std::env::args().any(|a| a == "--help" || a == "-h") {
+        println!("dotfiles — configure your terminal environment\n");
+        println!("USAGE:");
+        println!("    dotfiles\n");
+        println!("OPTIONS:");
+        println!("    -h, --help    Print this help message and exit");
+        return;
+    }
+
     if let Err(e) = run() {
         match e.downcast_ref::<InquireError>() {
             Some(InquireError::OperationCanceled) | Some(InquireError::OperationInterrupted) => {

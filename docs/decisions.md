@@ -76,6 +76,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
 
+### D13: Cross-Compilation Tooling — `cargo-zigbuild`
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** The release pipeline requires a MUSL static binary for Linux. Two options evaluated: `cross` (Docker-based) and `cargo-zigbuild` (Zig as cross-linker, no Docker). See [ADR-006](adrs/ADR-006-cross-compilation-tooling.md) for full analysis.
+- **Decision:** Use `cargo-zigbuild` for `x86_64-unknown-linux-musl`. Native `cargo build` for macOS targets.
+- **Rationale:** No Docker dependency in CI. The project has no C FFI, so zigbuild's limitations are irrelevant. Faster, simpler GitHub Actions workflow.
+
 ### D12: Theme Distribution — Seed to Disk with defaults/custom Split
 
 - **Date:** 2026-03-30

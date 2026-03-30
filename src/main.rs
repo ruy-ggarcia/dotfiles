@@ -1,3 +1,4 @@
+mod assets;
 mod engine;
 mod font;
 mod models;

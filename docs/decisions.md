@@ -76,6 +76,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
 
+### D11: Shell Template Distribution — Compile-time Embedding
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** Shell prompt templates (`prompt.zsh.tera`, `prompt.bash.tera`) are internal implementation details of the installer. A distributed binary has no access to the source tree. Two options were evaluated: (1) embed via `include_str!` at compile time; (2) install templates alongside the binary to a fixed location. Templates are not user-editable content — they are part of the tool's implementation.
+- **Decision:** Embed shell templates as `&'static str` constants in `src/assets.rs` using `include_str!`.
+- **Rationale:** Templates are internal, not user-facing. Embedding eliminates a category of runtime failures (missing files, wrong paths) with negligible binary size cost (<2KB). The binary becomes fully self-contained for its core functionality. User-facing palettes use a different strategy (see D12).
+
 ### D10: Platform Detection — Compile-time `cfg!(target_os)`
 
 - **Date:** 2026-03-30

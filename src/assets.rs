@@ -3,6 +3,14 @@ pub const BASH_TEMPLATE: &str = include_str!("../modules/bash/home/prompt.bash.t
 pub const KITTY_TEMPLATE: &str = include_str!("../modules/kitty/kitty.conf.tera");
 pub const ALACRITTY_TEMPLATE: &str = include_str!("../modules/alacritty/alacritty.toml.tera");
 
+pub const CATPPUCCIN_MACCHIATO: &str = include_str!("../themes/catppuccin_macchiato.toml");
+pub const KANAGAWA_DRAGON: &str = include_str!("../themes/kanagawa_dragon.toml");
+
+pub const DEFAULT_THEMES: &[(&str, &str)] = &[
+    ("catppuccin_macchiato.toml", CATPPUCCIN_MACCHIATO),
+    ("kanagawa_dragon.toml", KANAGAWA_DRAGON),
+];
+
 #[cfg(test)]
 mod tests {
     use super::*;

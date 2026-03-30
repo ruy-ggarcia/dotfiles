@@ -11,7 +11,7 @@ use std::path::Path;
 
 use inquire::InquireError;
 use models::{Font, Shell, TerminalEmulator, UserSelection};
-use scanner::{scan_shells, scan_terminal_emulators, scan_themes};
+use scanner::{scan_installed_themes, scan_shells, scan_terminal_emulators, seed_default_themes};
 
 fn main() {
     if let Err(e) = run() {
@@ -63,7 +63,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let font_dir_refs: Vec<&std::path::Path> = font_dirs.iter().map(|p| p.as_path()).collect();
     let detected_fonts = font::scan_fonts(&font_dir_refs);
 
-    let themes = scan_themes(std::path::Path::new("themes"));
+    let themes_base = std::path::PathBuf::from(&home).join(".config/dotfiles/themes");
+    seed_default_themes(&themes_base)?;
+    let themes = scan_installed_themes(&themes_base);
 
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,

@@ -76,6 +76,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
 
+### D12: Theme Distribution — Seed to Disk with defaults/custom Split
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** The distributed binary has no access to the source tree for theme TOML files. Two options were evaluated: (1) embed themes as `include_str!` constants and use them purely in-memory; (2) embed themes but seed them to `~/.config/dotfiles/themes/defaults/` on startup, scanning that directory plus `~/.config/dotfiles/themes/custom/` at runtime.
+- **Decision:** Seed default themes to disk on each run. Scan `defaults/` and `custom/` subdirectories. Custom themes take precedence over defaults when names collide.
+- **Rationale:** Option 1 makes the binary self-contained but prevents users from extending the theme system without contributing to the repository. The `defaults/custom/` split gives users a clear, documented location for personal themes that is never overwritten by the tool. This directly enables Story 5 (Custom Theme) from the PRD.
+
 ### D11: Shell Template Distribution — Compile-time Embedding
 
 - **Date:** 2026-03-30

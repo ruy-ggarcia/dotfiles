@@ -4,11 +4,7 @@ use std::path::Path;
 pub fn scan_fonts(dirs: &[&Path]) -> Vec<String> {
     let mut families: HashSet<String> = HashSet::new();
     for dir in dirs {
-        let entries = match std::fs::read_dir(dir) {
-            Ok(e) => e,
-            Err(_) => continue,
-        };
-        for entry in entries.flatten() {
+        for entry in walkdir::WalkDir::new(dir).into_iter().flatten() {
             let path = entry.path();
             let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
             if ext != "ttf" && ext != "otf" {
@@ -49,6 +45,12 @@ mod tests {
 
     fn make_file(dir: &TempDir, name: &str) {
         fs::write(dir.path().join(name), b"").unwrap();
+    }
+
+    fn make_nested_file(dir: &TempDir, subpath: &str) {
+        let full = dir.path().join(subpath);
+        fs::create_dir_all(full.parent().unwrap()).unwrap();
+        fs::write(full, b"").unwrap();
     }
 
     #[test]
@@ -103,6 +105,14 @@ mod tests {
     fn test_scan_fonts_handles_otf() {
         let dir = TempDir::new().unwrap();
         make_file(&dir, "FooNerdFont-Regular.otf");
+        let result = scan_fonts(&[dir.path()]);
+        assert_eq!(result, vec!["Foo Nerd Font"]);
+    }
+
+    #[test]
+    fn test_scan_fonts_finds_nested_font() {
+        let dir = TempDir::new().unwrap();
+        make_nested_file(&dir, "truetype/nerd/FooNerdFont-Regular.ttf");
         let result = scan_fonts(&[dir.path()]);
         assert_eq!(result, vec!["Foo Nerd Font"]);
     }

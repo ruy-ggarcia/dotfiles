@@ -227,6 +227,7 @@ dependencies = [
  "tempfile",
  "tera",
  "toml",
+ "walkdir",
 ]
 
 [[package]]

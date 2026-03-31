@@ -10,6 +10,8 @@ The MVP is reached when all six milestones are complete. Each milestone is indep
 
 The first working product. A user on MacOS can run the binary, answer a few questions, and walk away with a consistently themed shell.
 
+**Status:** 🟢 Completed
+
 **Scope:**
 - Detect Bash and Zsh installations on the system
 - Interactive TUI: tool selection, theme selection, Nerd Font selection
@@ -24,6 +26,8 @@ The first working product. A user on MacOS can run the binary, answer a few ques
 
 The same experience on Ubuntu Linux. Closes all P0 requirements from the PRD.
 
+**Status:** ⚪ Pending
+
 **Scope:**
 - All M1 behavior on Ubuntu Linux (x86_64)
 - Nerd Font detection from Linux system font directories
@@ -33,6 +37,8 @@ The same experience on Ubuntu Linux. Closes all P0 requirements from the PRD.
 ## M3 — Distribution
 
 Any user can install dotfiles with a single command, without a Rust toolchain on their machine.
+
+**Status:** ⚪ Pending
 
 **Scope:**
 - Pre-compiled binaries published to GitHub Releases for all supported platforms
@@ -45,6 +51,8 @@ Any user can install dotfiles with a single command, without a Rust toolchain on
 
 The selected theme is reflected in the terminal emulator, not just the shell prompt.
 
+**Status:** ⚪ Pending
+
 **Scope:**
 - Kitty configuration and theme integration
 - Alacritty configuration and theme integration
@@ -55,6 +63,8 @@ The selected theme is reflected in the terminal emulator, not just the shell pro
 
 Theme and configuration consistency extended to terminal multiplexers.
 
+**Status:** ⚪ Pending
+
 **Scope:**
 - Zellij configuration and theme integration
 - Tmux configuration and theme integration
@@ -64,6 +74,8 @@ Theme and configuration consistency extended to terminal multiplexers.
 ## M6 — Editors
 
 Full-stack terminal theming. Completes all P1 requirements from the PRD and marks the MVP.
+
+**Status:** ⚪ Pending
 
 **Scope:**
 - NeoVim configuration and theme integration

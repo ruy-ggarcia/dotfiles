@@ -6,20 +6,10 @@ pub enum Shell {
     Zsh,
 }
 
-#[derive(Debug, PartialEq, Clone)]
-pub struct Module {
-    pub shell: Shell,
-}
-
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Emulator {
     Kitty,
     Alacritty,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct EmulatorModule {
-    pub emulator: Emulator,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -30,8 +20,8 @@ pub struct Theme {
 
 #[derive(Debug, PartialEq)]
 pub struct UserSelection {
-    pub shells: Vec<Module>,
-    pub emulators: Vec<EmulatorModule>,
+    pub shells: Vec<Shell>,
+    pub emulators: Vec<Emulator>,
     pub font: String,
     pub font_size: u8,
     pub theme: Theme,
@@ -39,8 +29,8 @@ pub struct UserSelection {
 
 #[derive(Debug)]
 pub struct Plan {
-    pub shells: Vec<Module>,
-    pub emulators: Vec<EmulatorModule>,
+    pub shells: Vec<Shell>,
+    pub emulators: Vec<Emulator>,
     pub font: String,
     pub font_size: u8,
     pub theme: Theme,
@@ -83,7 +73,7 @@ mod tests {
 
     #[test]
     fn test_user_selection_stores_shells() {
-        let shells = vec![Module { shell: Shell::Zsh }];
+        let shells = vec![Shell::Zsh];
         let sel = UserSelection {
             shells: shells.clone(),
             emulators: vec![],
@@ -132,7 +122,7 @@ mod tests {
 
     #[test]
     fn test_plan_stores_shells() {
-        let shells = vec![Module { shell: Shell::Bash }];
+        let shells = vec![Shell::Bash];
         let plan = Plan {
             shells: shells.clone(),
             emulators: vec![],
@@ -182,14 +172,14 @@ mod tests {
     #[test]
     fn test_user_selection_equality() {
         let a = UserSelection {
-            shells: vec![Module { shell: Shell::Bash }],
+            shells: vec![Shell::Bash],
             emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,
             theme: make_theme("Test"),
         };
         let b = UserSelection {
-            shells: vec![Module { shell: Shell::Bash }],
+            shells: vec![Shell::Bash],
             emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,

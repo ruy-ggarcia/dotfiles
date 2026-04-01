@@ -1,32 +1,32 @@
 use inquire::{MultiSelect, Select};
 
-use crate::models::{EmulatorModule, Module, Theme};
+use crate::models::{Emulator, Shell, Theme};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-pub fn select_shells(shells: Vec<Module>) -> Result<Vec<Module>> {
-    let names: Vec<String> = shells.iter().map(|m| format!("{:?}", m.shell)).collect();
+pub fn select_shells(shells: Vec<Shell>) -> Result<Vec<Shell>> {
+    let names: Vec<String> = shells.iter().map(|shell| format!("{:?}", shell)).collect();
     let selected_names = MultiSelect::new("Select shells to configure:", names.clone()).prompt()?;
     let result = shells
         .into_iter()
-        .filter(|m| selected_names.contains(&format!("{:?}", m.shell)))
+        .filter(|shell| selected_names.contains(&format!("{:?}", shell)))
         .collect();
     Ok(result)
 }
 
-pub fn select_emulators(emulators: Vec<EmulatorModule>) -> Result<Vec<EmulatorModule>> {
+pub fn select_emulators(emulators: Vec<Emulator>) -> Result<Vec<Emulator>> {
     if emulators.is_empty() {
         return Ok(vec![]);
     }
     let names: Vec<String> = emulators
         .iter()
-        .map(|m| format!("{:?}", m.emulator))
+        .map(|emulator| format!("{:?}", emulator))
         .collect();
     let selected_names =
         MultiSelect::new("Select terminal emulators to configure:", names).prompt()?;
     let result = emulators
         .into_iter()
-        .filter(|m| selected_names.contains(&format!("{:?}", m.emulator)))
+        .filter(|emulator| selected_names.contains(&format!("{:?}", emulator)))
         .collect();
     Ok(result)
 }

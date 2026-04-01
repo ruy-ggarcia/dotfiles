@@ -14,11 +14,11 @@ pub fn generate_plan(selection: UserSelection) -> Plan {
 
 pub fn print_summary(plan: &Plan) {
     println!("=== Dotfiles installation plan ===");
-    for module in &plan.shells {
-        println!("  · Configure {:?}", module.shell);
+    for shell in &plan.shells {
+        println!("  · Configure {:?}", shell);
     }
-    for module in &plan.emulators {
-        println!("  · Configure {:?}", module.emulator);
+    for emulator in &plan.emulators {
+        println!("  · Configure {:?}", emulator);
     }
     println!("  · Font: {} {}pt", plan.font, plan.font_size);
     println!("  · Theme: {}", plan.theme.name);
@@ -29,8 +29,8 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
     use crate::{symlink, template};
     use std::collections::HashMap;
 
-    for module in &plan.shells {
-        let (template_path, prompt_name, rc_name) = match module.shell {
+    for shell in &plan.shells {
+        let (template_path, prompt_name, rc_name) = match shell {
             Shell::Zsh => ("modules/zsh/home/prompt.zsh.tera", "prompt.zsh", ".zshrc"),
             Shell::Bash => (
                 "modules/bash/home/prompt.bash.tera",
@@ -77,8 +77,8 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         }
     }
 
-    for module in &plan.emulators {
-        let (template_path, config_name, config_subdir) = match module.emulator {
+    for emulator in &plan.emulators {
+        let (template_path, config_name, config_subdir) = match emulator {
             Emulator::Kitty => (
                 "modules/kitty/kitty.conf.tera",
                 "kitty.conf",
@@ -137,7 +137,7 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{Module, Shell, Theme};
+    use crate::models::{Shell, Theme};
     use std::collections::HashMap;
 
     fn make_theme(name: &str) -> Theme {
@@ -177,7 +177,7 @@ mod tests {
     fn test_generate_plan_includes_theme() {
         let theme = make_theme("Catppuccin Macchiato");
         let selection = UserSelection {
-            shells: vec![Module { shell: Shell::Zsh }],
+            shells: vec![Shell::Zsh],
             emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
@@ -190,30 +190,27 @@ mod tests {
     #[test]
     fn test_generate_plan_with_two_shells() {
         let selection = UserSelection {
-            shells: vec![Module { shell: Shell::Bash }, Module { shell: Shell::Zsh }],
+            shells: vec![Shell::Bash, Shell::Zsh],
             emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
-        assert_eq!(
-            plan.shells,
-            vec![Module { shell: Shell::Bash }, Module { shell: Shell::Zsh }]
-        );
+        assert_eq!(plan.shells, vec![Shell::Bash, Shell::Zsh]);
     }
 
     #[test]
     fn test_generate_plan_with_single_shell() {
         let selection = UserSelection {
-            shells: vec![Module { shell: Shell::Zsh }],
+            shells: vec![Shell::Zsh],
             emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
-        assert_eq!(plan.shells, vec![Module { shell: Shell::Zsh }]);
+        assert_eq!(plan.shells, vec![Shell::Zsh]);
     }
 
     #[test]

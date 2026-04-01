@@ -7,7 +7,7 @@ pub enum Shell {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub enum Emulator {
+pub enum TerminalEmulator {
     Kitty,
     Alacritty,
 }
@@ -21,7 +21,7 @@ pub struct Theme {
 #[derive(Debug, PartialEq)]
 pub struct UserSelection {
     pub shells: Vec<Shell>,
-    pub emulators: Vec<Emulator>,
+    pub terminal_emulators: Vec<TerminalEmulator>,
     pub font: String,
     pub font_size: u8,
     pub theme: Theme,
@@ -30,7 +30,7 @@ pub struct UserSelection {
 #[derive(Debug)]
 pub struct Plan {
     pub shells: Vec<Shell>,
-    pub emulators: Vec<Emulator>,
+    pub terminal_emulators: Vec<TerminalEmulator>,
     pub font: String,
     pub font_size: u8,
     pub theme: Theme,
@@ -76,7 +76,7 @@ mod tests {
         let shells = vec![Shell::Zsh];
         let sel = UserSelection {
             shells: shells.clone(),
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -88,7 +88,7 @@ mod tests {
     fn test_user_selection_stores_font() {
         let sel = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -100,7 +100,7 @@ mod tests {
     fn test_user_selection_stores_font_size() {
         let sel = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 14,
             theme: make_theme("Test"),
@@ -112,7 +112,7 @@ mod tests {
     fn test_user_selection_debug_format() {
         let sel = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -125,7 +125,7 @@ mod tests {
         let shells = vec![Shell::Bash];
         let plan = Plan {
             shells: shells.clone(),
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -137,7 +137,7 @@ mod tests {
     fn test_plan_stores_font() {
         let plan = Plan {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -149,7 +149,7 @@ mod tests {
     fn test_plan_stores_font_size() {
         let plan = Plan {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 14,
             theme: make_theme("Test"),
@@ -161,7 +161,7 @@ mod tests {
     fn test_plan_debug_format() {
         let plan = Plan {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -173,14 +173,14 @@ mod tests {
     fn test_user_selection_equality() {
         let a = UserSelection {
             shells: vec![Shell::Bash],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,
             theme: make_theme("Test"),
         };
         let b = UserSelection {
             shells: vec![Shell::Bash],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 11,
             theme: make_theme("Test"),

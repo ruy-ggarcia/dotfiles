@@ -9,8 +9,8 @@ mod tui;
 use std::path::Path;
 
 use inquire::InquireError;
-use models::{Emulator, Shell, UserSelection};
-use scanner::{scan_emulators, scan_shells, scan_themes};
+use models::{Shell, TerminalEmulator, UserSelection};
+use scanner::{scan_shells, scan_terminal_emulators, scan_themes};
 
 fn main() {
     if let Err(e) = run() {
@@ -38,21 +38,24 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let detected_shells = scan_shells(&entries);
 
-    let emulator_entries = [
-        (Emulator::Kitty, Path::new("/usr/local/bin/kitty")),
-        (Emulator::Kitty, Path::new("/usr/bin/kitty")),
+    let terminal_emulator_entries = [
+        (TerminalEmulator::Kitty, Path::new("/usr/local/bin/kitty")),
+        (TerminalEmulator::Kitty, Path::new("/usr/bin/kitty")),
         (
-            Emulator::Kitty,
+            TerminalEmulator::Kitty,
             Path::new("/Applications/kitty.app/Contents/MacOS/kitty"),
         ),
-        (Emulator::Alacritty, Path::new("/usr/local/bin/alacritty")),
-        (Emulator::Alacritty, Path::new("/usr/bin/alacritty")),
         (
-            Emulator::Alacritty,
+            TerminalEmulator::Alacritty,
+            Path::new("/usr/local/bin/alacritty"),
+        ),
+        (TerminalEmulator::Alacritty, Path::new("/usr/bin/alacritty")),
+        (
+            TerminalEmulator::Alacritty,
             Path::new("/Applications/Alacritty.app/Contents/MacOS/alacritty"),
         ),
     ];
-    let detected_emulators = scan_emulators(&emulator_entries);
+    let detected_terminal_emulators = scan_terminal_emulators(&terminal_emulator_entries);
 
     let home = std::env::var("HOME").unwrap_or_default();
     let font_dirs = font::font_dirs(&home);
@@ -63,7 +66,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
-        emulators: tui::select_emulators(detected_emulators)?,
+        terminal_emulators: tui::select_terminal_emulators(detected_terminal_emulators)?,
         font: tui::select_font(detected_fonts)?,
         font_size: tui::select_font_size()?,
         theme: tui::select_theme(themes)?,

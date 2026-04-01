@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use crate::models::{Emulator, Shell, Theme};
+use crate::models::{Shell, TerminalEmulator, Theme};
 
 pub fn scan_shells(entries: &[(Shell, &Path)]) -> Vec<Shell> {
     let mut seen: HashSet<Shell> = HashSet::new();
@@ -16,12 +16,12 @@ pub fn scan_shells(entries: &[(Shell, &Path)]) -> Vec<Shell> {
     result
 }
 
-pub fn scan_emulators(entries: &[(Emulator, &Path)]) -> Vec<Emulator> {
-    let mut seen: std::collections::HashSet<Emulator> = std::collections::HashSet::new();
-    let mut result: Vec<Emulator> = Vec::new();
-    for (emulator, path) in entries {
-        if path.exists() && seen.insert(emulator.clone()) {
-            result.push(emulator.clone());
+pub fn scan_terminal_emulators(entries: &[(TerminalEmulator, &Path)]) -> Vec<TerminalEmulator> {
+    let mut seen: std::collections::HashSet<TerminalEmulator> = std::collections::HashSet::new();
+    let mut result: Vec<TerminalEmulator> = Vec::new();
+    for (terminal_emulator, path) in entries {
+        if path.exists() && seen.insert(terminal_emulator.clone()) {
+            result.push(terminal_emulator.clone());
         }
     }
     result

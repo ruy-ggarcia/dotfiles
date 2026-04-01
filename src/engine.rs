@@ -1,11 +1,11 @@
 use std::path::Path;
 
-use crate::models::{Emulator, Plan, Shell, UserSelection};
+use crate::models::{Plan, Shell, TerminalEmulator, UserSelection};
 
 pub fn generate_plan(selection: UserSelection) -> Plan {
     Plan {
         shells: selection.shells,
-        emulators: selection.emulators,
+        terminal_emulators: selection.terminal_emulators,
         font: selection.font,
         font_size: selection.font_size,
         theme: selection.theme,
@@ -17,8 +17,8 @@ pub fn print_summary(plan: &Plan) {
     for shell in &plan.shells {
         println!("  · Configure {:?}", shell);
     }
-    for emulator in &plan.emulators {
-        println!("  · Configure {:?}", emulator);
+    for terminal_emulator in &plan.terminal_emulators {
+        println!("  · Configure {:?}", terminal_emulator);
     }
     println!("  · Font: {} {}pt", plan.font, plan.font_size);
     println!("  · Theme: {}", plan.theme.name);
@@ -77,14 +77,14 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         }
     }
 
-    for emulator in &plan.emulators {
-        let (template_path, config_name, config_subdir) = match emulator {
-            Emulator::Kitty => (
+    for terminal_emulator in &plan.terminal_emulators {
+        let (template_path, config_name, config_subdir) = match terminal_emulator {
+            TerminalEmulator::Kitty => (
                 "modules/kitty/kitty.conf.tera",
                 "kitty.conf",
                 ".config/kitty",
             ),
-            Emulator::Alacritty => (
+            TerminalEmulator::Alacritty => (
                 "modules/alacritty/alacritty.toml.tera",
                 "alacritty.toml",
                 ".config/alacritty",
@@ -178,7 +178,7 @@ mod tests {
         let theme = make_theme("Catppuccin Macchiato");
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme,
@@ -191,7 +191,7 @@ mod tests {
     fn test_generate_plan_with_two_shells() {
         let selection = UserSelection {
             shells: vec![Shell::Bash, Shell::Zsh],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -204,7 +204,7 @@ mod tests {
     fn test_generate_plan_with_single_shell() {
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -217,7 +217,7 @@ mod tests {
     fn test_generate_plan_preserves_font() {
         let selection = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -230,7 +230,7 @@ mod tests {
     fn test_generate_plan_preserves_font_size() {
         let selection = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 16,
             theme: make_theme("Test"),
@@ -243,7 +243,7 @@ mod tests {
     fn test_generate_plan_with_empty_shells() {
         let selection = UserSelection {
             shells: vec![],
-            emulators: vec![],
+            terminal_emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),

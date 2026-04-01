@@ -34,6 +34,8 @@ pub fn select_theme(themes: Vec<Theme>) -> Result<Theme> {
     let selected_name = Select::new("Select a theme:", names)
         .with_vim_mode(true)
         .prompt()?;
-    themes.into_iter().find(|p| p.name == selected_name)
+    themes
+        .into_iter()
+        .find(|p| p.name == selected_name)
         .ok_or_else(|| "Theme not found".into())
 }

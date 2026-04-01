@@ -22,18 +22,25 @@ pub fn print_summary(plan: &Plan) {
 }
 
 pub fn execute_plan(plan: &Plan, output_dir: &Path) {
-    use std::collections::HashMap;
     use crate::{symlink, template};
+    use std::collections::HashMap;
 
     for module in &plan.shells {
         let (template_path, prompt_name, rc_name) = match module.shell {
-            Shell::Zsh  => ("modules/zsh/home/prompt.zsh.tera",  "prompt.zsh",  ".zshrc"),
-            Shell::Bash => ("modules/bash/home/prompt.bash.tera", "prompt.bash", ".bashrc"),
+            Shell::Zsh => ("modules/zsh/home/prompt.zsh.tera", "prompt.zsh", ".zshrc"),
+            Shell::Bash => (
+                "modules/bash/home/prompt.bash.tera",
+                "prompt.bash",
+                ".bashrc",
+            ),
         };
 
         let template_str = match std::fs::read_to_string(template_path) {
             Ok(s) => s,
-            Err(e) => { eprintln!("Cannot read {template_path}: {e}"); continue; }
+            Err(e) => {
+                eprintln!("Cannot read {template_path}: {e}");
+                continue;
+            }
         };
 
         let mut vars = HashMap::new();
@@ -47,12 +54,16 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
 
         let rendered = match template::render(&template_str, &vars) {
             Ok(s) => s,
-            Err(e) => { eprintln!("Render error for {template_path}: {e}"); continue; }
+            Err(e) => {
+                eprintln!("Render error for {template_path}: {e}");
+                continue;
+            }
         };
 
         let prompt_file = output_dir.join(prompt_name);
         if let Err(e) = std::fs::write(&prompt_file, &rendered) {
-            eprintln!("Write error {}: {e}", prompt_file.display()); continue;
+            eprintln!("Write error {}: {e}", prompt_file.display());
+            continue;
         }
 
         let home = std::env::var("HOME").unwrap_or_default();
@@ -66,8 +77,8 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::models::{Module, Shell, Theme};
     use std::collections::HashMap;
-    use crate::models::{Module, Theme, Shell};
 
     fn make_theme(name: &str) -> Theme {
         let mut colors = HashMap::new();
@@ -105,7 +116,10 @@ mod tests {
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
-        assert_eq!(plan.shells, vec![Module { shell: Shell::Bash }, Module { shell: Shell::Zsh }]);
+        assert_eq!(
+            plan.shells,
+            vec![Module { shell: Shell::Bash }, Module { shell: Shell::Zsh }]
+        );
     }
 
     #[test]

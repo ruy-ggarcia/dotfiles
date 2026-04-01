@@ -4,11 +4,7 @@ use std::path::Path;
 pub fn scan_fonts(dirs: &[&Path]) -> Vec<String> {
     let mut families: HashSet<String> = HashSet::new();
     for dir in dirs {
-        let entries = match std::fs::read_dir(dir) {
-            Ok(e) => e,
-            Err(_) => continue,
-        };
-        for entry in entries.flatten() {
+        for entry in walkdir::WalkDir::new(dir).into_iter().flatten() {
             let path = entry.path();
             let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
             if ext != "ttf" && ext != "otf" {
@@ -26,6 +22,21 @@ pub fn scan_fonts(dirs: &[&Path]) -> Vec<String> {
     result
 }
 
+pub fn font_dirs(home: &str) -> Vec<std::path::PathBuf> {
+    if cfg!(target_os = "linux") {
+        vec![
+            std::path::PathBuf::from(home).join(".local/share/fonts"),
+            std::path::PathBuf::from("/usr/share/fonts"),
+            std::path::PathBuf::from("/usr/local/share/fonts"),
+        ]
+    } else {
+        vec![
+            std::path::PathBuf::from(home).join("Library/Fonts"),
+            std::path::PathBuf::from("/Library/Fonts"),
+        ]
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -34,6 +45,12 @@ mod tests {
 
     fn make_file(dir: &TempDir, name: &str) {
         fs::write(dir.path().join(name), b"").unwrap();
+    }
+
+    fn make_nested_file(dir: &TempDir, subpath: &str) {
+        let full = dir.path().join(subpath);
+        fs::create_dir_all(full.parent().unwrap()).unwrap();
+        fs::write(full, b"").unwrap();
     }
 
     #[test]
@@ -90,5 +107,44 @@ mod tests {
         make_file(&dir, "FooNerdFont-Regular.otf");
         let result = scan_fonts(&[dir.path()]);
         assert_eq!(result, vec!["Foo Nerd Font"]);
+    }
+
+    #[test]
+    fn test_scan_fonts_finds_nested_font() {
+        let dir = TempDir::new().unwrap();
+        make_nested_file(&dir, "truetype/nerd/FooNerdFont-Regular.ttf");
+        let result = scan_fonts(&[dir.path()]);
+        assert_eq!(result, vec!["Foo Nerd Font"]);
+    }
+
+    #[test]
+    fn test_font_dirs_never_empty() {
+        let dirs = font_dirs("/home/user");
+        assert!(!dirs.is_empty());
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn test_font_dirs_macos_contains_library_fonts() {
+        let dirs = font_dirs("/Users/testuser");
+        let paths: Vec<String> = dirs
+            .iter()
+            .map(|p| p.to_string_lossy().to_string())
+            .collect();
+        assert!(paths.iter().any(|p| p.contains("Library/Fonts")));
+        assert!(!paths.iter().any(|p| p.contains(".local/share/fonts")));
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn test_font_dirs_linux_contains_local_share_fonts() {
+        let dirs = font_dirs("/home/testuser");
+        let paths: Vec<String> = dirs
+            .iter()
+            .map(|p| p.to_string_lossy().to_string())
+            .collect();
+        assert!(paths.iter().any(|p| p.contains(".local/share/fonts")));
+        assert!(paths.iter().any(|p| p == "/usr/share/fonts"));
+        assert!(!paths.iter().any(|p| p.contains("Library/Fonts")));
     }
 }

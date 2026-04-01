@@ -57,7 +57,10 @@ mod tests {
         let template = std::fs::read_to_string("modules/zsh/home/prompt.zsh.tera").unwrap();
         let vars = theme_vars();
         let result = render(&template, &vars).unwrap();
-        assert!(result.contains("vcs_info"), "zshrc output should contain vcs_info");
+        assert!(
+            result.contains("vcs_info"),
+            "zshrc output should contain vcs_info"
+        );
     }
 
     #[test]
@@ -73,7 +76,10 @@ mod tests {
         let template = std::fs::read_to_string("modules/zsh/home/prompt.zsh.tera").unwrap();
         let vars = theme_vars();
         let result = render(&template, &vars).unwrap();
-        assert!(result.contains("DOTFILES_ACCENT"), "zshrc output should reference DOTFILES_ACCENT");
+        assert!(
+            result.contains("DOTFILES_ACCENT"),
+            "zshrc output should reference DOTFILES_ACCENT"
+        );
     }
 
     #[test]
@@ -81,7 +87,10 @@ mod tests {
         let template = std::fs::read_to_string("modules/bash/home/prompt.bash.tera").unwrap();
         let vars = theme_vars();
         let result = render(&template, &vars).unwrap();
-        assert!(result.contains("DOTFILES_ACCENT"), "bashrc output should reference DOTFILES_ACCENT");
+        assert!(
+            result.contains("DOTFILES_ACCENT"),
+            "bashrc output should reference DOTFILES_ACCENT"
+        );
     }
 
     #[test]
@@ -89,6 +98,9 @@ mod tests {
         let template = std::fs::read_to_string("modules/zsh/home/prompt.zsh.tera").unwrap();
         let vars = theme_vars();
         let result = render(&template, &vars).unwrap();
-        assert!(!result.contains("{{"), "zshrc output should not contain unresolved template variables");
+        assert!(
+            !result.contains("{{"),
+            "zshrc output should not contain unresolved template variables"
+        );
     }
 }

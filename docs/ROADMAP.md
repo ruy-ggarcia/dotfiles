@@ -26,7 +26,7 @@ The first working product. A user on MacOS can run the binary, answer a few ques
 
 The same experience on Ubuntu Linux. Closes all P0 requirements from the PRD.
 
-**Status:** ⚪ Pending
+**Status:** 🟢 Completed
 
 **Scope:**
 - All M1 behavior on Ubuntu Linux (x86_64)

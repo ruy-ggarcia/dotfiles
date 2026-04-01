@@ -39,11 +39,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let detected_shells = scan_shells(&entries);
 
     let home = std::env::var("HOME").unwrap_or_default();
-    let home_fonts = std::path::PathBuf::from(&home).join("Library/Fonts");
-    let detected_fonts = font::scan_fonts(&[
-        home_fonts.as_path(),
-        Path::new("/Library/Fonts"),
-    ]);
+    let font_dirs = font::font_dirs(&home);
+    let font_dir_refs: Vec<&std::path::Path> = font_dirs.iter().map(|p| p.as_path()).collect();
+    let detected_fonts = font::scan_fonts(&font_dir_refs);
 
     let themes = scan_themes(std::path::Path::new("themes"));
 
@@ -57,9 +55,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let plan = engine::generate_plan(selection);
     engine::print_summary(&plan);
 
-    let output_dir = std::path::PathBuf::from(
-        std::env::var("HOME").unwrap_or_default()
-    ).join(".config/dotfiles/rendered");
+    let output_dir = std::path::PathBuf::from(std::env::var("HOME").unwrap_or_default())
+        .join(".config/dotfiles/rendered");
     std::fs::create_dir_all(&output_dir).ok();
     engine::execute_plan(&plan, &output_dir);
 

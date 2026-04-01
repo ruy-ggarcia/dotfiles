@@ -9,7 +9,7 @@ mod tui;
 use std::path::Path;
 
 use inquire::InquireError;
-use models::{Shell, TerminalEmulator, UserSelection};
+use models::{Font, Shell, TerminalEmulator, UserSelection};
 use scanner::{scan_shells, scan_terminal_emulators, scan_themes};
 
 fn main() {
@@ -67,8 +67,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
         terminal_emulators: tui::select_terminal_emulators(detected_terminal_emulators)?,
-        font: tui::select_font(detected_fonts)?,
-        font_size: tui::select_font_size()?,
+        font: Font {
+            family: tui::select_font(detected_fonts)?,
+            size: tui::select_font_size()?,
+        },
         theme: tui::select_theme(themes)?,
     };
 

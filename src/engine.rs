@@ -7,7 +7,6 @@ pub fn generate_plan(selection: UserSelection) -> Plan {
         shells: selection.shells,
         terminal_emulators: selection.terminal_emulators,
         font: selection.font,
-        font_size: selection.font_size,
         theme: selection.theme,
     }
 }
@@ -20,7 +19,7 @@ pub fn print_summary(plan: &Plan) {
     for terminal_emulator in &plan.terminal_emulators {
         println!("  · Configure {:?}", terminal_emulator);
     }
-    println!("  · Font: {} {}pt", plan.font, plan.font_size);
+    println!("  · Font: {} {}pt", plan.font.family, plan.font.size);
     println!("  · Theme: {}", plan.theme.name);
     println!("==================================");
 }
@@ -48,8 +47,8 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         };
 
         let mut vars = HashMap::new();
-        vars.insert("font_family", plan.font.as_str());
-        let size_str = plan.font_size.to_string();
+        vars.insert("font_family", plan.font.family.as_str());
+        let size_str = plan.font.size.to_string();
         vars.insert("font_size", size_str.as_str());
 
         for (key, value) in &plan.theme.colors {
@@ -100,8 +99,8 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         };
 
         let mut vars = HashMap::new();
-        vars.insert("font_family", plan.font.as_str());
-        let size_str = plan.font_size.to_string();
+        vars.insert("font_family", plan.font.family.as_str());
+        let size_str = plan.font.size.to_string();
         vars.insert("font_size", size_str.as_str());
         for (key, value) in &plan.theme.colors {
             vars.insert(key.as_str(), value.as_str());
@@ -137,7 +136,7 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{Shell, Theme};
+    use crate::models::{Font, Shell, Theme};
     use std::collections::HashMap;
 
     fn make_theme(name: &str) -> Theme {
@@ -179,8 +178,10 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
             terminal_emulators: vec![],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme,
         };
         let plan = generate_plan(selection);
@@ -192,8 +193,10 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Bash, Shell::Zsh],
             terminal_emulators: vec![],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
@@ -205,8 +208,10 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
             terminal_emulators: vec![],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
@@ -218,12 +223,14 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 12,
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
-        assert_eq!(plan.font, "Hack Nerd Font");
+        assert_eq!(plan.font.family, "Hack Nerd Font");
     }
 
     #[test]
@@ -231,12 +238,14 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 16,
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 16,
+            },
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
-        assert_eq!(plan.font_size, 16u8);
+        assert_eq!(plan.font.size, 16u8);
     }
 
     #[test]
@@ -244,8 +253,10 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);

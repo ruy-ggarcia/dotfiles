@@ -11,8 +11,12 @@ on:
 
 jobs:
   test:
-    name: cargo test
-    runs-on: ubuntu-latest
+    name: cargo test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Checkout

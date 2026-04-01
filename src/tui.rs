@@ -1,6 +1,6 @@
 use inquire::{MultiSelect, Select};
 
-use crate::models::{Module, Theme};
+use crate::models::{EmulatorModule, Module, Theme};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -10,6 +10,23 @@ pub fn select_shells(shells: Vec<Module>) -> Result<Vec<Module>> {
     let result = shells
         .into_iter()
         .filter(|m| selected_names.contains(&format!("{:?}", m.shell)))
+        .collect();
+    Ok(result)
+}
+
+pub fn select_emulators(emulators: Vec<EmulatorModule>) -> Result<Vec<EmulatorModule>> {
+    if emulators.is_empty() {
+        return Ok(vec![]);
+    }
+    let names: Vec<String> = emulators
+        .iter()
+        .map(|m| format!("{:?}", m.emulator))
+        .collect();
+    let selected_names =
+        MultiSelect::new("Select terminal emulators to configure:", names).prompt()?;
+    let result = emulators
+        .into_iter()
+        .filter(|m| selected_names.contains(&format!("{:?}", m.emulator)))
         .collect();
     Ok(result)
 }

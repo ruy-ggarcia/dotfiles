@@ -1,0 +1,53 @@
+name = "Catppuccin Macchiato"
+
+# Catppuccin Macchiato — native palette (from catppuccin/catppuccin)
+rosewater = "#f4dbd6"
+flamingo  = "#f0c6c6"
+pink      = "#f5bde6"
+mauve     = "#c6a0f6"
+red       = "#ed8796"
+maroon    = "#ee99a0"
+peach     = "#f5a97f"
+yellow    = "#eed49f"
+green     = "#a6da95"
+teal      = "#8bd5ca"
+sky       = "#91d7e3"
+sapphire  = "#7dc4e4"
+blue      = "#8aadf4"
+lavender  = "#b7bdf8"
+text      = "#cad3f5"
+subtext1  = "#b8c0e0"
+subtext0  = "#a5adcb"
+overlay2  = "#939ab7"
+overlay1  = "#8087a2"
+overlay0  = "#6e738d"
+surface2  = "#5b6078"
+surface1  = "#494d64"
+surface0  = "#363a4f"
+base      = "#24273a"
+mantle    = "#1e2030"
+crust     = "#181926"
+
+# UI colors — consumed by terminal emulator templates
+# base and text already defined above in native palette
+cursor       = "#f4dbd6"   # rosewater
+selection_bg = "#5b6078"   # surface2
+selection_fg = "#cad3f5"   # text
+
+# ANSI color palette — from official Catppuccin terminal spec
+color0       = "#494d64"   # normal black   — surface1
+color1       = "#ed8796"   # normal red     — red
+color2       = "#a6da95"   # normal green   — green
+color3       = "#eed49f"   # normal yellow  — yellow
+color4       = "#8aadf4"   # normal blue    — blue
+color5       = "#f5bde6"   # normal magenta — pink
+color6       = "#8bd5ca"   # normal cyan    — teal
+color7       = "#a5adcb"   # normal white   — subtext0
+color8       = "#5b6078"   # bright black   — surface2
+color9       = "#ec7486"   # bright red     — bright red
+color10      = "#8ccf7f"   # bright green   — bright green
+color11      = "#e1c682"   # bright yellow  — bright yellow
+color12      = "#78a1f6"   # bright blue    — bright blue
+color13      = "#f2a9dd"   # bright magenta — bright pink
+color14      = "#63cbc0"   # bright cyan    — bright teal
+color15      = "#b8c0e0"   # bright white   — subtext1

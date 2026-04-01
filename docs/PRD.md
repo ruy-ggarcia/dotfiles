@@ -79,7 +79,7 @@ Dotfiles detects which tools are present on the system and offers to configure o
 - **Interactive TUI:** Dotfiles must present a TUI for the user to select which detected tools to configure, which theme to apply, and which Nerd Font to use.
 - **Cross-Platform Support:** The system must officially support MacOS and Ubuntu Linux.
 - **Tool Detection:** Dotfiles must detect which supported tools are installed on the system and offer to configure only those. Tools that are not installed are silently excluded from the selection.
-- **Shell Configuration:** Dotfiles must support configuring Bash and Zsh, including themed prompt and fzf color integration.
+- **Shell Configuration:** Dotfiles must support configuring Bash and Zsh, including themed prompt and fzf color integration. Shell rc files (`~/.zshrc`, `~/.bashrc`) must never be replaced or overwritten — the installer injects a single guarded `source` line and manages the prompt in a separate fragment file.
 - **Idempotent Execution:** Dotfiles must be safely repeatable at any time without destructive consequences.
 
 ### P1 (High)
@@ -103,5 +103,5 @@ Dotfiles detects which tools are present on the system and offers to configure o
 
 ## 8. Risks & Mitigations
 
-- **Conflicting Existing Dotfiles:** Users with existing configurations may have files that conflict with dotfiles' targets. Mitigation: dotfiles backs up any conflicting file before replacing it, and the backup path is printed so the user can recover.
+- **Conflicting Existing Dotfiles:** Users with existing configurations may have files that conflict with dotfiles' targets. For shell rc files (`~/.zshrc`, `~/.bashrc`): dotfiles never replaces them — it appends a single source line (idempotent). For all other tool config files (Kitty, Alacritty, Zellij, etc.): dotfiles backs up any conflicting file before replacing it, and the backup path is printed so the user can recover.
 - **Invalid Theme Configurations:** A palette file missing required color keys would cause template rendering to fail. Mitigation: palette schema validation runs at startup and rejects malformed palettes before any user interaction begins.

@@ -1,0 +1,57 @@
+name = "Kanagawa Dragon"
+
+# Kanagawa Dragon — native palette
+dragon_black0   = "#0d0c0c"
+dragon_black1   = "#12120f"
+dragon_black2   = "#1D1C19"
+dragon_black3   = "#181616"
+dragon_black4   = "#282727"
+dragon_black5   = "#393836"
+dragon_black6   = "#625e5a"
+dragon_white    = "#c5c9c5"
+dragon_green    = "#87a987"
+dragon_green2   = "#8a9a7b"
+dragon_pink     = "#a292a3"
+dragon_orange   = "#b6927b"
+dragon_orange2  = "#b98d7b"
+dragon_gray     = "#a6a69c"
+dragon_gray2    = "#9e9b93"
+dragon_gray3    = "#7a8382"
+dragon_blue2    = "#8ba4b0"
+dragon_violet   = "#8992a7"
+dragon_red      = "#c4746e"
+dragon_aqua     = "#8ea4a2"
+dragon_ash      = "#737c73"
+dragon_teal     = "#949fb5"
+dragon_yellow   = "#c4b28a"
+old_white       = "#C8C093"
+spring_blue     = "#7FB4CA"
+spring_violet1  = "#938AA9"
+wave_red        = "#E46876"
+carp_yellow     = "#E6C384"
+wave_aqua2      = "#7AA89F"
+
+# UI colors — consumed by terminal emulator templates
+base         = "#181616"   # dragon_black3
+text         = "#c5c9c5"   # dragon_white
+cursor       = "#c5c9c5"   # dragon_white
+selection_bg = "#393836"   # dragon_black5
+selection_fg = "#c5c9c5"   # dragon_white
+
+# ANSI color palette — from official dragon() term mapping in themes.lua
+color0       = "#0d0c0c"   # normal black   — dragon_black0
+color1       = "#c4746e"   # normal red     — dragon_red
+color2       = "#8a9a7b"   # normal green   — dragon_green2
+color3       = "#c4b28a"   # normal yellow  — dragon_yellow
+color4       = "#8ba4b0"   # normal blue    — dragon_blue2
+color5       = "#a292a3"   # normal magenta — dragon_pink
+color6       = "#8ea4a2"   # normal cyan    — dragon_aqua
+color7       = "#C8C093"   # normal white   — old_white
+color8       = "#a6a69c"   # bright black   — dragon_gray
+color9       = "#E46876"   # bright red     — wave_red
+color10      = "#87a987"   # bright green   — dragon_green
+color11      = "#E6C384"   # bright yellow  — carp_yellow
+color12      = "#7FB4CA"   # bright blue    — spring_blue
+color13      = "#938AA9"   # bright magenta — spring_violet1
+color14      = "#7AA89F"   # bright cyan    — wave_aqua2
+color15      = "#c5c9c5"   # bright white   — dragon_white

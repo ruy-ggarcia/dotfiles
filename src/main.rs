@@ -9,8 +9,8 @@ mod tui;
 use std::path::Path;
 
 use inquire::InquireError;
-use models::{Shell, UserSelection};
-use scanner::{scan_shells, scan_themes};
+use models::{Font, Shell, TerminalEmulator, UserSelection};
+use scanner::{scan_shells, scan_terminal_emulators, scan_themes};
 
 fn main() {
     if let Err(e) = run() {
@@ -38,6 +38,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let detected_shells = scan_shells(&entries);
 
+    let terminal_emulator_entries = [
+        (TerminalEmulator::Kitty, Path::new("/usr/local/bin/kitty")),
+        (TerminalEmulator::Kitty, Path::new("/usr/bin/kitty")),
+        (
+            TerminalEmulator::Kitty,
+            Path::new("/Applications/kitty.app/Contents/MacOS/kitty"),
+        ),
+        (
+            TerminalEmulator::Alacritty,
+            Path::new("/usr/local/bin/alacritty"),
+        ),
+        (TerminalEmulator::Alacritty, Path::new("/usr/bin/alacritty")),
+        (
+            TerminalEmulator::Alacritty,
+            Path::new("/Applications/Alacritty.app/Contents/MacOS/alacritty"),
+        ),
+    ];
+    let detected_terminal_emulators = scan_terminal_emulators(&terminal_emulator_entries);
+
     let home = std::env::var("HOME").unwrap_or_default();
     let font_dirs = font::font_dirs(&home);
     let font_dir_refs: Vec<&std::path::Path> = font_dirs.iter().map(|p| p.as_path()).collect();
@@ -47,8 +66,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
-        font: tui::select_font(detected_fonts)?,
-        font_size: tui::select_font_size()?,
+        terminal_emulators: tui::select_terminal_emulators(detected_terminal_emulators)?,
+        font: Font {
+            family: tui::select_font(detected_fonts)?,
+            size: tui::select_font_size()?,
+        },
         theme: tui::select_theme(themes)?,
     };
 

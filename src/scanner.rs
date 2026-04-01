@@ -1,20 +1,29 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use crate::models::{Module, Shell, Theme};
+use crate::models::{Shell, TerminalEmulator, Theme};
 
-pub fn scan_shells(entries: &[(Shell, &Path)]) -> Vec<Module> {
+pub fn scan_shells(entries: &[(Shell, &Path)]) -> Vec<Shell> {
     let mut seen: HashSet<Shell> = HashSet::new();
-    let mut result: Vec<Module> = Vec::new();
+    let mut result: Vec<Shell> = Vec::new();
 
     for (shell, path) in entries {
         if path.exists() && seen.insert(shell.clone()) {
-            result.push(Module {
-                shell: shell.clone(),
-            });
+            result.push(shell.clone());
         }
     }
 
+    result
+}
+
+pub fn scan_terminal_emulators(entries: &[(TerminalEmulator, &Path)]) -> Vec<TerminalEmulator> {
+    let mut seen: std::collections::HashSet<TerminalEmulator> = std::collections::HashSet::new();
+    let mut result: Vec<TerminalEmulator> = Vec::new();
+    for (terminal_emulator, path) in entries {
+        if path.exists() && seen.insert(terminal_emulator.clone()) {
+            result.push(terminal_emulator.clone());
+        }
+    }
     result
 }
 
@@ -121,8 +130,8 @@ mod tests {
 
     #[test]
     fn test_module_equality() {
-        let a = Module { shell: Shell::Zsh };
-        let b = Module { shell: Shell::Zsh };
+        let a = Shell::Zsh;
+        let b = Shell::Zsh;
         assert_eq!(a, b);
     }
 
@@ -131,7 +140,7 @@ mod tests {
         let entries = [(Shell::Zsh, Path::new("/bin/sh"))];
         let result = scan_shells(&entries);
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].shell, Shell::Zsh);
+        assert_eq!(result[0], Shell::Zsh);
     }
 
     #[test]
@@ -139,7 +148,7 @@ mod tests {
         let entries = [(Shell::Bash, Path::new("/bin/sh"))];
         let result = scan_shells(&entries);
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].shell, Shell::Bash);
+        assert_eq!(result[0], Shell::Bash);
     }
 
     #[test]
@@ -157,7 +166,7 @@ mod tests {
         ];
         let result = scan_shells(&entries);
         assert_eq!(result.len(), 2);
-        let shells: Vec<&Shell> = result.iter().map(|m| &m.shell).collect();
+        let shells: Vec<&Shell> = result.iter().collect();
         assert!(shells.contains(&&Shell::Bash));
         assert!(shells.contains(&&Shell::Zsh));
     }
@@ -180,7 +189,7 @@ mod tests {
         ];
         let result = scan_shells(&entries);
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0].shell, Shell::Zsh);
+        assert_eq!(result[0], Shell::Zsh);
     }
 
     #[test]

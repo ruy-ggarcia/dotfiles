@@ -6,9 +6,10 @@ pub enum Shell {
     Zsh,
 }
 
-#[derive(Debug, PartialEq, Clone)]
-pub struct Module {
-    pub shell: Shell,
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub enum TerminalEmulator {
+    Kitty,
+    Alacritty,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -17,19 +18,25 @@ pub struct Theme {
     pub colors: HashMap<String, String>,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub struct Font {
+    pub family: String,
+    pub size: u8,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct UserSelection {
-    pub shells: Vec<Module>,
-    pub font: String,
-    pub font_size: u8,
+    pub shells: Vec<Shell>,
+    pub terminal_emulators: Vec<TerminalEmulator>,
+    pub font: Font,
     pub theme: Theme,
 }
 
 #[derive(Debug)]
 pub struct Plan {
-    pub shells: Vec<Module>,
-    pub font: String,
-    pub font_size: u8,
+    pub shells: Vec<Shell>,
+    pub terminal_emulators: Vec<TerminalEmulator>,
+    pub font: Font,
     pub theme: Theme,
 }
 
@@ -70,11 +77,14 @@ mod tests {
 
     #[test]
     fn test_user_selection_stores_shells() {
-        let shells = vec![Module { shell: Shell::Zsh }];
+        let shells = vec![Shell::Zsh];
         let sel = UserSelection {
             shells: shells.clone(),
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         assert_eq!(sel.shells, shells);
@@ -84,30 +94,39 @@ mod tests {
     fn test_user_selection_stores_font() {
         let sel = UserSelection {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
-        assert_eq!(sel.font, "Hack Nerd Font");
+        assert_eq!(sel.font.family, "Hack Nerd Font");
     }
 
     #[test]
     fn test_user_selection_stores_font_size() {
         let sel = UserSelection {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 14,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 14,
+            },
             theme: make_theme("Test"),
         };
-        assert_eq!(sel.font_size, 14u8);
+        assert_eq!(sel.font.size, 14u8);
     }
 
     #[test]
     fn test_user_selection_debug_format() {
         let sel = UserSelection {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let _ = format!("{:?}", sel);
@@ -115,11 +134,14 @@ mod tests {
 
     #[test]
     fn test_plan_stores_shells() {
-        let shells = vec![Module { shell: Shell::Bash }];
+        let shells = vec![Shell::Bash];
         let plan = Plan {
             shells: shells.clone(),
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         assert_eq!(plan.shells, shells);
@@ -129,30 +151,39 @@ mod tests {
     fn test_plan_stores_font() {
         let plan = Plan {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
-        assert_eq!(plan.font, "Hack Nerd Font");
+        assert_eq!(plan.font.family, "Hack Nerd Font");
     }
 
     #[test]
     fn test_plan_stores_font_size() {
         let plan = Plan {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 14,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 14,
+            },
             theme: make_theme("Test"),
         };
-        assert_eq!(plan.font_size, 14u8);
+        assert_eq!(plan.font.size, 14u8);
     }
 
     #[test]
     fn test_plan_debug_format() {
         let plan = Plan {
             shells: vec![],
-            font: String::from("Hack Nerd Font"),
-            font_size: 12,
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
             theme: make_theme("Test"),
         };
         let _ = format!("{:?}", plan);
@@ -161,15 +192,21 @@ mod tests {
     #[test]
     fn test_user_selection_equality() {
         let a = UserSelection {
-            shells: vec![Module { shell: Shell::Bash }],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 11,
+            shells: vec![Shell::Bash],
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 11,
+            },
             theme: make_theme("Test"),
         };
         let b = UserSelection {
-            shells: vec![Module { shell: Shell::Bash }],
-            font: String::from("FiraCode Nerd Font"),
-            font_size: 11,
+            shells: vec![Shell::Bash],
+            terminal_emulators: vec![],
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 11,
+            },
             theme: make_theme("Test"),
         };
         assert_eq!(a, b);

@@ -51,7 +51,7 @@ Any user can install dotfiles with a single command, without a Rust toolchain on
 
 The selected theme is reflected in the terminal emulator, not just the shell prompt.
 
-**Status:** ⚪ Pending
+**Status:** 🟢 Completed
 
 **Scope:**
 - Kitty configuration and theme integration

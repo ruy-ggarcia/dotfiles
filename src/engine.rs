@@ -1,10 +1,11 @@
 use std::path::Path;
 
-use crate::models::{Plan, Shell, UserSelection};
+use crate::models::{Emulator, Plan, Shell, UserSelection};
 
 pub fn generate_plan(selection: UserSelection) -> Plan {
     Plan {
         shells: selection.shells,
+        emulators: selection.emulators,
         font: selection.font,
         font_size: selection.font_size,
         theme: selection.theme,
@@ -15,6 +16,9 @@ pub fn print_summary(plan: &Plan) {
     println!("=== Dotfiles installation plan ===");
     for module in &plan.shells {
         println!("  · Configure {:?}", module.shell);
+    }
+    for module in &plan.emulators {
+        println!("  · Configure {:?}", module.emulator);
     }
     println!("  · Font: {} {}pt", plan.font, plan.font_size);
     println!("  · Theme: {}", plan.theme.name);
@@ -72,6 +76,62 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
             eprintln!("RC inject error: {e}");
         }
     }
+
+    for module in &plan.emulators {
+        let (template_path, config_name, config_subdir) = match module.emulator {
+            Emulator::Kitty => (
+                "modules/kitty/kitty.conf.tera",
+                "kitty.conf",
+                ".config/kitty",
+            ),
+            Emulator::Alacritty => (
+                "modules/alacritty/alacritty.toml.tera",
+                "alacritty.toml",
+                ".config/alacritty",
+            ),
+        };
+
+        let template_str = match std::fs::read_to_string(template_path) {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("Cannot read {template_path}: {e}");
+                continue;
+            }
+        };
+
+        let mut vars = HashMap::new();
+        vars.insert("font_family", plan.font.as_str());
+        let size_str = plan.font_size.to_string();
+        vars.insert("font_size", size_str.as_str());
+        for (key, value) in &plan.theme.colors {
+            vars.insert(key.as_str(), value.as_str());
+        }
+
+        let rendered = match template::render(&template_str, &vars) {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("Render error for {template_path}: {e}");
+                continue;
+            }
+        };
+
+        let out_file = output_dir.join(config_name);
+        if let Err(e) = std::fs::write(&out_file, &rendered) {
+            eprintln!("Write error {}: {e}", out_file.display());
+            continue;
+        }
+
+        let home = std::env::var("HOME").unwrap_or_default();
+        let config_dir = std::path::Path::new(&home).join(config_subdir);
+        if let Err(e) = std::fs::create_dir_all(&config_dir) {
+            eprintln!("Cannot create {}: {e}", config_dir.display());
+            continue;
+        }
+        let dest = config_dir.join(config_name);
+        if let Err(e) = symlink::create_symlink(&out_file, &dest) {
+            eprintln!("Symlink error for {config_name}: {e}");
+        }
+    }
 }
 
 #[cfg(test)]
@@ -88,6 +148,25 @@ mod tests {
         colors.insert("accent".to_string(), "#8aadf4".to_string());
         colors.insert("surface".to_string(), "#363a4f".to_string());
         colors.insert("overlay".to_string(), "#6e738d".to_string());
+        colors.insert("cursor".to_string(), "#f4dbd6".to_string());
+        colors.insert("selection_bg".to_string(), "#5b6078".to_string());
+        colors.insert("selection_fg".to_string(), "#cad3f5".to_string());
+        colors.insert("color0".to_string(), "#494d64".to_string());
+        colors.insert("color1".to_string(), "#ed8796".to_string());
+        colors.insert("color2".to_string(), "#a6da95".to_string());
+        colors.insert("color3".to_string(), "#eed49f".to_string());
+        colors.insert("color4".to_string(), "#8aadf4".to_string());
+        colors.insert("color5".to_string(), "#f5bde6".to_string());
+        colors.insert("color6".to_string(), "#8bd5ca".to_string());
+        colors.insert("color7".to_string(), "#b8c0e0".to_string());
+        colors.insert("color8".to_string(), "#5b6078".to_string());
+        colors.insert("color9".to_string(), "#ed8796".to_string());
+        colors.insert("color10".to_string(), "#a6da95".to_string());
+        colors.insert("color11".to_string(), "#eed49f".to_string());
+        colors.insert("color12".to_string(), "#8aadf4".to_string());
+        colors.insert("color13".to_string(), "#f5bde6".to_string());
+        colors.insert("color14".to_string(), "#8bd5ca".to_string());
+        colors.insert("color15".to_string(), "#a5adcb".to_string());
         Theme {
             name: name.to_string(),
             colors,
@@ -99,6 +178,7 @@ mod tests {
         let theme = make_theme("Catppuccin Macchiato");
         let selection = UserSelection {
             shells: vec![Module { shell: Shell::Zsh }],
+            emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme,
@@ -111,6 +191,7 @@ mod tests {
     fn test_generate_plan_with_two_shells() {
         let selection = UserSelection {
             shells: vec![Module { shell: Shell::Bash }, Module { shell: Shell::Zsh }],
+            emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -126,6 +207,7 @@ mod tests {
     fn test_generate_plan_with_single_shell() {
         let selection = UserSelection {
             shells: vec![Module { shell: Shell::Zsh }],
+            emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -138,6 +220,7 @@ mod tests {
     fn test_generate_plan_preserves_font() {
         let selection = UserSelection {
             shells: vec![],
+            emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
@@ -150,6 +233,7 @@ mod tests {
     fn test_generate_plan_preserves_font_size() {
         let selection = UserSelection {
             shells: vec![],
+            emulators: vec![],
             font: String::from("Hack Nerd Font"),
             font_size: 16,
             theme: make_theme("Test"),
@@ -162,11 +246,44 @@ mod tests {
     fn test_generate_plan_with_empty_shells() {
         let selection = UserSelection {
             shells: vec![],
+            emulators: vec![],
             font: String::from("FiraCode Nerd Font"),
             font_size: 12,
             theme: make_theme("Test"),
         };
         let plan = generate_plan(selection);
         assert!(plan.shells.is_empty());
+    }
+
+    #[test]
+    fn test_kitty_template_renders_with_theme_vars() {
+        let template = std::fs::read_to_string("modules/kitty/kitty.conf.tera").unwrap();
+        let theme = make_theme("Test");
+        let mut vars = HashMap::new();
+        vars.insert("font_family", "JetBrainsMono Nerd Font");
+        vars.insert("font_size", "12");
+        for (key, value) in &theme.colors {
+            vars.insert(key.as_str(), value.as_str());
+        }
+
+        let rendered = crate::template::render(&template, &vars).unwrap();
+        assert!(rendered.contains("font_family JetBrainsMono Nerd Font"));
+        assert!(rendered.contains("background #24273a"));
+    }
+
+    #[test]
+    fn test_alacritty_template_renders_with_theme_vars() {
+        let template = std::fs::read_to_string("modules/alacritty/alacritty.toml.tera").unwrap();
+        let theme = make_theme("Test");
+        let mut vars = HashMap::new();
+        vars.insert("font_family", "JetBrainsMono Nerd Font");
+        vars.insert("font_size", "12");
+        for (key, value) in &theme.colors {
+            vars.insert(key.as_str(), value.as_str());
+        }
+
+        let rendered = crate::template::render(&template, &vars).unwrap();
+        assert!(rendered.contains("family = \"JetBrainsMono Nerd Font\""));
+        assert!(rendered.contains("background = \"#24273a\""));
     }
 }

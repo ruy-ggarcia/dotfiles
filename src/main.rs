@@ -55,9 +55,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let plan = engine::generate_plan(selection);
     engine::print_summary(&plan);
 
-    let output_dir = std::path::PathBuf::from(
-        std::env::var("HOME").unwrap_or_default()
-    ).join(".config/dotfiles/rendered");
+    let output_dir = std::path::PathBuf::from(std::env::var("HOME").unwrap_or_default())
+        .join(".config/dotfiles/rendered");
     std::fs::create_dir_all(&output_dir).ok();
     engine::execute_plan(&plan, &output_dir);
 

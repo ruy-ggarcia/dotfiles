@@ -127,7 +127,10 @@ mod tests {
     #[test]
     fn test_font_dirs_macos_contains_library_fonts() {
         let dirs = font_dirs("/Users/testuser");
-        let paths: Vec<String> = dirs.iter().map(|p| p.to_string_lossy().to_string()).collect();
+        let paths: Vec<String> = dirs
+            .iter()
+            .map(|p| p.to_string_lossy().to_string())
+            .collect();
         assert!(paths.iter().any(|p| p.contains("Library/Fonts")));
         assert!(!paths.iter().any(|p| p.contains(".local/share/fonts")));
     }
@@ -136,7 +139,10 @@ mod tests {
     #[test]
     fn test_font_dirs_linux_contains_local_share_fonts() {
         let dirs = font_dirs("/home/testuser");
-        let paths: Vec<String> = dirs.iter().map(|p| p.to_string_lossy().to_string()).collect();
+        let paths: Vec<String> = dirs
+            .iter()
+            .map(|p| p.to_string_lossy().to_string())
+            .collect();
         assert!(paths.iter().any(|p| p.contains(".local/share/fonts")));
         assert!(paths.iter().any(|p| p == "/usr/share/fonts"));
         assert!(!paths.iter().any(|p| p.contains("Library/Fonts")));

@@ -38,7 +38,7 @@ The same experience on Ubuntu Linux. Closes all P0 requirements from the PRD.
 
 Any user can install dotfiles with a single command, without a Rust toolchain on their machine.
 
-**Status:** ⚪ Pending
+**Status:** 🟢 Completed
 
 **Scope:**
 - Pre-compiled binaries published to GitHub Releases for all supported platforms

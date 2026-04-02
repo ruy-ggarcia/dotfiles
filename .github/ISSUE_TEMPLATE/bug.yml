@@ -1,0 +1,74 @@
+name: Bug Report
+description: Report something broken, incorrect, or unexpectedly degraded.
+title: "Bug: "
+labels:
+  - type: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for reproducible bugs, regressions, crashes, or incorrect behavior.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is broken?
+      placeholder: "Describe the bug in one or two sentences."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: List the exact steps needed to trigger the issue.
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: "What should have happened instead?"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: "What happened in reality? Include error output if relevant."
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Share the relevant runtime details.
+      value: |
+        - OS:
+        - Architecture:
+        - Shell / terminal:
+        - App version / commit:
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Context
+      description: Optional screenshots, logs, workarounds, or related links.
+    validations:
+      required: false
+  - type: dropdown
+    id: user-impact
+    attributes:
+      label: User Impact
+      description: Describe the impact from your perspective; maintainers will map this to project priority during triage.
+      options:
+        - Blocks a core workflow
+        - Major friction, but there is a workaround
+        - Useful improvement, not urgent
+        - Nice to have
+    validations:
+      required: true

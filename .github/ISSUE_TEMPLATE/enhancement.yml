@@ -1,0 +1,88 @@
+name: Enhancement
+description: Propose an improvement to existing behavior, tooling, or contributor workflow.
+title: "Enhancement: "
+labels:
+  - type: enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for improvements that refine existing behavior without introducing a fully new feature.
+  - type: textarea
+    id: current-limitation
+    attributes:
+      label: Current Limitation
+      description: What feels rough, unclear, incomplete, or costly today?
+      placeholder: "Describe the current pain point or weakness."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Improvement
+      description: What should improve, and for whom?
+      placeholder: "Describe the better behavior, workflow, or result you want."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Keep the improvement concrete and testable.
+      value: |
+        - [ ] Improvement 1
+        - [ ] Improvement 2
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of Scope
+      description: Optional, but useful when the enhancement could expand.
+      value: |
+        - [ ] Not included 1
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria / DoD
+      description: Define the minimum bar for considering the enhancement done.
+      value: |
+        - [ ] **Functionality:**
+        - [ ] **Quality:**
+        - [ ] **Review:**
+    validations:
+      required: true
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Technical Notes
+      description: Optional files, paths, dependencies, constraints, or implementation hints.
+      value: |
+        - **Key files/paths:**
+        - **Dependencies/constraints:**
+    validations:
+      required: false
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional related issues, PRs, docs, ADRs, or external references.
+      value: |
+        - Related issue/PR:
+        - Docs / ADR:
+    validations:
+      required: false
+  - type: dropdown
+    id: user-impact
+    attributes:
+      label: User Impact
+      description: Describe the impact from your perspective; maintainers will map this to project priority during triage.
+      options:
+        - Blocks a core workflow
+        - Major friction, but there is a workaround
+        - Useful improvement, not urgent
+        - Nice to have
+    validations:
+      required: true

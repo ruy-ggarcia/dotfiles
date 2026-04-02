@@ -1,0 +1,92 @@
+name: Feature
+description: Propose a new user-facing feature with clear scope and acceptance criteria.
+title: "Feature: "
+labels:
+  - type: feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for meaningful new functionality.
+
+        Keep it practical: explain the problem, the intended outcome, the boundaries, and how we'll know it's done.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Opportunity
+      description: What is missing today, and why does it matter?
+      placeholder: "Describe the user or project problem this feature should solve."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-outcome
+    attributes:
+      label: Proposed Outcome
+      description: What should be true after this feature is implemented?
+      placeholder: "Describe the intended result for users or maintainers."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Keep the in-scope work concrete and testable.
+      value: |
+        - [ ] Deliverable 1
+        - [ ] Deliverable 2
+        - [ ] Deliverable 3
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of Scope
+      description: Optional, but useful to prevent scope creep.
+      value: |
+        - [ ] Not included 1
+        - [ ] Not included 2
+    validations:
+      required: false
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done (DoD)
+      description: Capture the acceptance and quality bar as checklist items.
+      value: |
+        - [ ] **Functionality:**
+        - [ ] **Quality:**
+        - [ ] **Review:**
+    validations:
+      required: true
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Technical Notes
+      description: Optional pointers to likely files, dependencies, constraints, or implementation considerations.
+      value: |
+        - **Key files/paths:**
+        - **Dependencies/constraints:**
+    validations:
+      required: false
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional links to related issues, PRs, ADRs, docs, or external references.
+      value: |
+        - Related issue/PR:
+        - Docs / ADR:
+    validations:
+      required: false
+  - type: dropdown
+    id: user-impact
+    attributes:
+      label: User Impact
+      description: Describe the impact from your perspective; maintainers will map this to project priority during triage.
+      options:
+        - Blocks a core workflow
+        - Major friction, but there is a workaround
+        - Useful improvement, not urgent
+        - Nice to have
+    validations:
+      required: true

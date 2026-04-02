@@ -75,9 +75,33 @@ pub fn validate_theme(toml_str: &str) -> Result<Theme, String> {
     Ok(Theme { name, colors })
 }
 
+pub fn seed_default_themes(base: &Path) -> std::io::Result<()> {
+    let defaults_dir = base.join("defaults");
+    std::fs::create_dir_all(&defaults_dir)?;
+    std::fs::create_dir_all(base.join("custom"))?;
+    for (filename, content) in crate::assets::DEFAULT_THEMES {
+        std::fs::write(defaults_dir.join(filename), content)?;
+    }
+    Ok(())
+}
+
+pub fn scan_installed_themes(base: &Path) -> Vec<Theme> {
+    let mut by_name: std::collections::HashMap<String, Theme> = std::collections::HashMap::new();
+    for theme in scan_themes(&base.join("defaults")) {
+        by_name.insert(theme.name.clone(), theme);
+    }
+    for theme in scan_themes(&base.join("custom")) {
+        by_name.insert(theme.name.clone(), theme);
+    }
+    let mut result: Vec<Theme> = by_name.into_values().collect();
+    result.sort_by(|a, b| a.name.cmp(&b.name));
+    result
+}
+
 pub fn scan_themes(dir: &Path) -> Vec<Theme> {
     let entries = match std::fs::read_dir(dir) {
         Ok(e) => e,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return vec![],
         Err(e) => {
             eprintln!("Cannot read themes dir {}: {e}", dir.display());
             return vec![];
@@ -235,6 +259,79 @@ mod tests {
         assert!(result.is_ok());
         let palette = result.unwrap();
         assert_eq!(palette.name, "Test Theme");
+    }
+
+    #[test]
+    fn test_seed_creates_defaults_dir() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        assert!(base.path().join("defaults").is_dir());
+    }
+
+    #[test]
+    fn test_seed_writes_all_default_themes() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        let count = std::fs::read_dir(base.path().join("defaults"))
+            .unwrap()
+            .count();
+        assert_eq!(count, crate::assets::DEFAULT_THEMES.len());
+    }
+
+    #[test]
+    fn test_seed_is_idempotent() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        seed_default_themes(base.path()).unwrap();
+        let count = std::fs::read_dir(base.path().join("defaults"))
+            .unwrap()
+            .count();
+        assert_eq!(count, crate::assets::DEFAULT_THEMES.len());
+    }
+
+    #[test]
+    fn test_scan_installed_finds_defaults() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        let themes = scan_installed_themes(base.path());
+        assert_eq!(themes.len(), crate::assets::DEFAULT_THEMES.len());
+    }
+
+    #[test]
+    fn test_scan_installed_custom_adds_to_defaults() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        let custom_dir = base.path().join("custom");
+        std::fs::create_dir_all(&custom_dir).unwrap();
+        std::fs::write(custom_dir.join("my_theme.toml"), VALID_TOML).unwrap();
+        let themes = scan_installed_themes(base.path());
+        assert_eq!(themes.len(), crate::assets::DEFAULT_THEMES.len() + 1);
+    }
+
+    #[test]
+    fn test_scan_installed_custom_overrides_default_by_name() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+        let custom_dir = base.path().join("custom");
+        std::fs::create_dir_all(&custom_dir).unwrap();
+        // Same name as a default theme — custom wins
+        let override_toml = concat!(
+            "name = \"Catppuccin Macchiato\"\n",
+            "base = \"#ff0000\"\ntext = \"#cad3f5\"\n",
+            "cursor = \"#f4dbd6\"\nselection_bg = \"#5b6078\"\nselection_fg = \"#cad3f5\"\n",
+            "color0 = \"#494d64\"\ncolor1 = \"#ed8796\"\ncolor2 = \"#a6da95\"\ncolor3 = \"#eed49f\"\n",
+            "color4 = \"#8aadf4\"\ncolor5 = \"#f5bde6\"\ncolor6 = \"#8bd5ca\"\ncolor7 = \"#b8c0e0\"\n",
+            "color8 = \"#5b6078\"\ncolor9 = \"#ed8796\"\ncolor10 = \"#a6da95\"\ncolor11 = \"#eed49f\"\n",
+            "color12 = \"#8aadf4\"\ncolor13 = \"#f5bde6\"\ncolor14 = \"#8bd5ca\"\ncolor15 = \"#a5adcb\"\n",
+        );
+        std::fs::write(custom_dir.join("override.toml"), override_toml).unwrap();
+        let themes = scan_installed_themes(base.path());
+        let macchiato = themes
+            .iter()
+            .find(|t| t.name == "Catppuccin Macchiato")
+            .unwrap();
+        assert_eq!(macchiato.colors["base"], "#ff0000");
+        assert_eq!(themes.len(), crate::assets::DEFAULT_THEMES.len());
     }
 
     #[test]

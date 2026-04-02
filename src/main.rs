@@ -1,3 +1,4 @@
+mod assets;
 mod engine;
 mod font;
 mod models;
@@ -10,9 +11,18 @@ use std::path::Path;
 
 use inquire::InquireError;
 use models::{Font, Shell, TerminalEmulator, UserSelection};
-use scanner::{scan_shells, scan_terminal_emulators, scan_themes};
+use scanner::{scan_installed_themes, scan_shells, scan_terminal_emulators, seed_default_themes};
 
 fn main() {
+    if std::env::args().any(|a| a == "--help" || a == "-h") {
+        println!("dotfiles — configure your terminal environment\n");
+        println!("USAGE:");
+        println!("    dotfiles\n");
+        println!("OPTIONS:");
+        println!("    -h, --help    Print this help message and exit");
+        return;
+    }
+
     if let Err(e) = run() {
         match e.downcast_ref::<InquireError>() {
             Some(InquireError::OperationCanceled) | Some(InquireError::OperationInterrupted) => {
@@ -62,7 +72,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let font_dir_refs: Vec<&std::path::Path> = font_dirs.iter().map(|p| p.as_path()).collect();
     let detected_fonts = font::scan_fonts(&font_dir_refs);
 
-    let themes = scan_themes(std::path::Path::new("themes"));
+    let themes_base = std::path::PathBuf::from(&home).join(".config/dotfiles/themes");
+    seed_default_themes(&themes_base)?;
+    let themes = scan_installed_themes(&themes_base);
 
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,

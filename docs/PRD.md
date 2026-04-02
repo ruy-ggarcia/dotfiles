@@ -61,6 +61,16 @@ Dotfiles detects which tools are present on the system and offers to configure o
   - Applying a theme updates configurations for all installed and selected tools simultaneously.
   - Theme colors are consistent across tools — the same palette key maps to the same visual role everywhere.
 
+### Story 5: Custom Theme
+
+- **As a** User,
+- **I want** to add my own custom theme palette to my local dotfiles setup,
+- **So that** I can use a color scheme not included in the defaults without forking the repository or opening a pull request.
+- _Acceptance Criteria:_
+  - The user can place a valid TOML palette file in `~/.config/dotfiles/themes/custom/`
+  - The TUI picks it up and presents it alongside the built-in themes
+  - Custom themes are never modified or deleted by dotfiles updates
+
 ### Story 4: Safe Re-execution (Idempotency)
 
 - **As a** User,

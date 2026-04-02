@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: false
+
+  build:
+    name: Build ${{ matrix.target }}
+    needs: create-release
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            runner: macos-latest
+          - target: x86_64-apple-darwin
+            runner: macos-latest
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Zig (Linux MUSL only)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.15.2
+
+      - name: Install cargo-zigbuild (Linux MUSL only)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: cargo install cargo-zigbuild
+
+      - name: Run tests
+        run: cargo test --locked
+
+      - name: Build release binary (zigbuild)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: cargo zigbuild --release --locked --target ${{ matrix.target }}
+
+      - name: Build release binary (native)
+        if: matrix.target != 'x86_64-unknown-linux-musl'
+        run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Create tarball
+        run: |
+          cp target/${{ matrix.target }}/release/dotfiles dotfiles
+          tar czf dotfiles-${{ matrix.target }}.tar.gz dotfiles
+          rm dotfiles
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dotfiles-${{ matrix.target }}.tar.gz

@@ -29,21 +29,9 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
     use std::collections::HashMap;
 
     for shell in &plan.shells {
-        let (template_path, prompt_name, rc_name) = match shell {
-            Shell::Zsh => ("modules/zsh/home/prompt.zsh.tera", "prompt.zsh", ".zshrc"),
-            Shell::Bash => (
-                "modules/bash/home/prompt.bash.tera",
-                "prompt.bash",
-                ".bashrc",
-            ),
-        };
-
-        let template_str = match std::fs::read_to_string(template_path) {
-            Ok(s) => s,
-            Err(e) => {
-                eprintln!("Cannot read {template_path}: {e}");
-                continue;
-            }
+        let (template_str, prompt_name, rc_name) = match shell {
+            Shell::Zsh => (crate::assets::ZSH_TEMPLATE, "prompt.zsh", ".zshrc"),
+            Shell::Bash => (crate::assets::BASH_TEMPLATE, "prompt.bash", ".bashrc"),
         };
 
         let mut vars = HashMap::new();
@@ -55,10 +43,10 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
             vars.insert(key.as_str(), value.as_str());
         }
 
-        let rendered = match template::render(&template_str, &vars) {
+        let rendered = match template::render(template_str, &vars) {
             Ok(s) => s,
             Err(e) => {
-                eprintln!("Render error for {template_path}: {e}");
+                eprintln!("Render error for {prompt_name}: {e}");
                 continue;
             }
         };
@@ -77,25 +65,15 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
     }
 
     for terminal_emulator in &plan.terminal_emulators {
-        let (template_path, config_name, config_subdir) = match terminal_emulator {
-            TerminalEmulator::Kitty => (
-                "modules/kitty/kitty.conf.tera",
-                "kitty.conf",
-                ".config/kitty",
-            ),
+        let (template_str, config_name, config_subdir) = match terminal_emulator {
+            TerminalEmulator::Kitty => {
+                (crate::assets::KITTY_TEMPLATE, "kitty.conf", ".config/kitty")
+            }
             TerminalEmulator::Alacritty => (
-                "modules/alacritty/alacritty.toml.tera",
+                crate::assets::ALACRITTY_TEMPLATE,
                 "alacritty.toml",
                 ".config/alacritty",
             ),
-        };
-
-        let template_str = match std::fs::read_to_string(template_path) {
-            Ok(s) => s,
-            Err(e) => {
-                eprintln!("Cannot read {template_path}: {e}");
-                continue;
-            }
         };
 
         let mut vars = HashMap::new();
@@ -106,10 +84,10 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
             vars.insert(key.as_str(), value.as_str());
         }
 
-        let rendered = match template::render(&template_str, &vars) {
+        let rendered = match template::render(template_str, &vars) {
             Ok(s) => s,
             Err(e) => {
-                eprintln!("Render error for {template_path}: {e}");
+                eprintln!("Render error for {config_name}: {e}");
                 continue;
             }
         };
@@ -265,7 +243,6 @@ mod tests {
 
     #[test]
     fn test_kitty_template_renders_with_theme_vars() {
-        let template = std::fs::read_to_string("modules/kitty/kitty.conf.tera").unwrap();
         let theme = make_theme("Test");
         let mut vars = HashMap::new();
         vars.insert("font_family", "JetBrainsMono Nerd Font");
@@ -274,14 +251,13 @@ mod tests {
             vars.insert(key.as_str(), value.as_str());
         }
 
-        let rendered = crate::template::render(&template, &vars).unwrap();
+        let rendered = crate::template::render(crate::assets::KITTY_TEMPLATE, &vars).unwrap();
         assert!(rendered.contains("font_family JetBrainsMono Nerd Font"));
         assert!(rendered.contains("background #24273a"));
     }
 
     #[test]
     fn test_alacritty_template_renders_with_theme_vars() {
-        let template = std::fs::read_to_string("modules/alacritty/alacritty.toml.tera").unwrap();
         let theme = make_theme("Test");
         let mut vars = HashMap::new();
         vars.insert("font_family", "JetBrainsMono Nerd Font");
@@ -290,7 +266,7 @@ mod tests {
             vars.insert(key.as_str(), value.as_str());
         }
 
-        let rendered = crate::template::render(&template, &vars).unwrap();
+        let rendered = crate::template::render(crate::assets::ALACRITTY_TEMPLATE, &vars).unwrap();
         assert!(rendered.contains("family = \"JetBrainsMono Nerd Font\""));
         assert!(rendered.contains("background = \"#24273a\""));
     }

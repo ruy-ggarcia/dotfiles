@@ -76,6 +76,38 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Use a source guard: render the prompt to `~/.config/dotfiles/rendered/prompt.{zsh,bash}` and append a single guarded `source` line to the user's existing rc file.
 - **Rationale:** Non-destructive, idempotent, and consistent with industry-standard patterns (nvm, conda, Starship). The user's rc file is never overwritten — only a single line is appended, and only if it isn't already present.
 
+### D14: macOS Gatekeeper — Quarantine Removal in install.sh
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** macOS Gatekeeper quarantines binaries downloaded from the internet, blocking execution with a security dialog. Code signing and notarization require an Apple Developer Program membership ($99/year). The tool targets developers who are comfortable with CLI installers.
+- **Decision:** Run `xattr -d com.apple.quarantine` on the binary as part of `install.sh`, immediately after download and before the user interacts with it.
+- **Rationale:** The install script already runs with user consent (`curl | bash`). Removing the quarantine attribute within the same script is transparent and avoids user friction. This is the same pattern used by Homebrew-installed formulae. Code signing remains a future consideration if the user base expands beyond developers.
+
+### D13: Cross-Compilation Tooling — `cargo-zigbuild`
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** The release pipeline requires a MUSL static binary for Linux. Two options evaluated: `cross` (Docker-based) and `cargo-zigbuild` (Zig as cross-linker, no Docker). See [ADR-006](adrs/ADR-006-cross-compilation-tooling.md) for full analysis.
+- **Decision:** Use `cargo-zigbuild` for `x86_64-unknown-linux-musl`. Native `cargo build` for macOS targets.
+- **Rationale:** No Docker dependency in CI. The project has no C FFI, so zigbuild's limitations are irrelevant. Faster, simpler GitHub Actions workflow.
+
+### D12: Theme Distribution — Seed to Disk with defaults/custom Split
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** The distributed binary has no access to the source tree for theme TOML files. Two options were evaluated: (1) embed themes as `include_str!` constants and use them purely in-memory; (2) embed themes but seed them to `~/.config/dotfiles/themes/defaults/` on startup, scanning that directory plus `~/.config/dotfiles/themes/custom/` at runtime.
+- **Decision:** Seed default themes to disk on each run. Scan `defaults/` and `custom/` subdirectories. Custom themes take precedence over defaults when names collide.
+- **Rationale:** Option 1 makes the binary self-contained but prevents users from extending the theme system without contributing to the repository. The `defaults/custom/` split gives users a clear, documented location for personal themes that is never overwritten by the tool. This directly enables Story 5 (Custom Theme) from the PRD.
+
+### D11: Shell Template Distribution — Compile-time Embedding
+
+- **Date:** 2026-03-30
+- **Status:** Accepted
+- **Context:** Shell prompt templates (`prompt.zsh.tera`, `prompt.bash.tera`) are internal implementation details of the installer. A distributed binary has no access to the source tree. Two options were evaluated: (1) embed via `include_str!` at compile time; (2) install templates alongside the binary to a fixed location. Templates are not user-editable content — they are part of the tool's implementation.
+- **Decision:** Embed shell templates as `&'static str` constants in `src/assets.rs` using `include_str!`.
+- **Rationale:** Templates are internal, not user-facing. Embedding eliminates a category of runtime failures (missing files, wrong paths) with negligible binary size cost (<2KB). The binary becomes fully self-contained for its core functionality. User-facing palettes use a different strategy (see D12).
+
 ### D10: Platform Detection — Compile-time `cfg!(target_os)`
 
 - **Date:** 2026-03-30

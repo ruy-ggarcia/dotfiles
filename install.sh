@@ -80,4 +80,5 @@ if ! echo "${PATH}" | tr ':' '\n' | grep -qx "${INSTALL_DIR}"; then
   echo ""
 fi
 
-echo "Run 'dotfiles' to start the configuration wizard."
+echo "Launching dotfiles..."
+exec "${INSTALL_DIR}/${BIN_NAME}"

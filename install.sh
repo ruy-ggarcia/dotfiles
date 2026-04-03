@@ -81,4 +81,9 @@ if ! echo "${PATH}" | tr ':' '\n' | grep -qx "${INSTALL_DIR}"; then
 fi
 
 echo "Launching dotfiles..."
-exec "${INSTALL_DIR}/${BIN_NAME}"
+
+if [ -t 0 ]; then
+  exec < /dev/tty "${INSTALL_DIR}/${BIN_NAME}" "$@"
+fi
+
+exec "${INSTALL_DIR}/${BIN_NAME}" "$@"

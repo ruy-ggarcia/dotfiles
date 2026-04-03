@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO="ruy-ggarcia/dotfiles"
 BIN_NAME="dotfiles"
-INSTALL_DIR="${HOME}/.local/bin"
+INSTALL_DIR="${DOTFILES_INSTALL_DIR:-${HOME}/.local/bin}"
 
 # ── Detect OS and architecture ────────────────────────────────────────────────
 

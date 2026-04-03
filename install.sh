@@ -82,8 +82,27 @@ fi
 
 echo "Launching dotfiles..."
 
-if [ -t 0 ]; then
-  exec < /dev/tty "${INSTALL_DIR}/${BIN_NAME}" "$@"
+resolve_controlling_tty() {
+  local tty_name
+
+  tty_name="$(ps -o tty= -p $$ | tr -d '[:space:]')"
+
+  case "${tty_name}" in
+    ""|*\?*)
+      return 1
+      ;;
+  esac
+
+  printf '/dev/%s\n' "${tty_name}"
+}
+
+launch_stdin="/dev/stdin"
+
+if [ ! -t 0 ]; then
+  if ! launch_stdin="$(resolve_controlling_tty)"; then
+    echo "Unable to launch dotfiles interactively because no TTY was found." >&2
+    exit 1
+  fi
 fi
 
-exec "${INSTALL_DIR}/${BIN_NAME}" "$@"
+exec "${INSTALL_DIR}/${BIN_NAME}" "$@" < "${launch_stdin}"

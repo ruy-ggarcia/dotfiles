@@ -84,6 +84,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 - **Decision:** Run `xattr -d com.apple.quarantine` on the binary as part of `install.sh`, immediately after download and before the user interacts with it.
 - **Rationale:** The install script already runs with user consent (`curl | bash`). Removing the quarantine attribute within the same script is transparent and avoids user friction. This is the same pattern used by Homebrew-installed formulae. Code signing remains a future consideration if the user base expands beyond developers.
 
+### D15: Installer Integration Testing — Non-Interactive `--help` Path
+
+- **Date:** 2026-04-03
+- **Status:** Accepted
+- **Context:** After releasing `v0.1.0`, end-to-end validation exposed a TTY handoff bug in `install.sh` when run via `curl | bash`. We needed regression coverage for the installer, but full interactive PTY testing in CI adds platform-specific fragility and maintenance cost. Projects like `rustup` avoid testing the full interactive shell-installer path in CI and instead validate non-interactive installer execution paths while testing richer UI behavior elsewhere.
+- **Decision:** Scope the installer integration test to the non-interactive `--help` path. The automated test validates that `install.sh --help` exits successfully, installs the binary into an isolated directory, forwards the argument to the installed binary, and produces stable help markers (`dotfiles`, `--help`).
+- **Rationale:** This covers the concrete regression we hit in production — installer handoff plus argument forwarding — without overengineering PTY-heavy CI infrastructure. It follows the same pragmatic approach used by tools like `rustup`: keep shell-installer automation narrow and stable, and avoid treating the full interactive installer session as the primary CI contract.
+
 ### D13: Cross-Compilation Tooling — `cargo-zigbuild`
 
 - **Date:** 2026-03-30

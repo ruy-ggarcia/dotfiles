@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO="ruy-ggarcia/dotfiles"
 BIN_NAME="dotfiles"
-INSTALL_DIR="${HOME}/.local/bin"
+INSTALL_DIR="${DOTFILES_INSTALL_DIR:-${HOME}/.local/bin}"
 
 # ── Detect OS and architecture ────────────────────────────────────────────────
 
@@ -81,4 +81,9 @@ if ! echo "${PATH}" | tr ':' '\n' | grep -qx "${INSTALL_DIR}"; then
 fi
 
 echo "Launching dotfiles..."
-exec "${INSTALL_DIR}/${BIN_NAME}"
+
+if [ -t 0 ]; then
+  exec < /dev/tty "${INSTALL_DIR}/${BIN_NAME}" "$@"
+fi
+
+exec "${INSTALL_DIR}/${BIN_NAME}" "$@"

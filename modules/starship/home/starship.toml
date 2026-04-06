@@ -1,0 +1,70 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$shell\
+$username\
+$hostname\
+$directory\
+([git:\($git_branch$git_state\) ](white))\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+[os]
+disabled = false
+format = '[$symbol]($style) '
+style = "black"
+
+[os.symbols]
+Arch = "[ ](bold blue)"
+Debian = "[ ](bold red)"
+Macos = "[ ](bold white)"
+Ubuntu = "[ ](bold orange)"
+
+[shell]
+disabled = false
+style = "bright-black"
+
+[username]
+format = "([$user]($style) )"
+style_root = "bold underline cyan"
+style_user = "cyan"
+
+[hostname]
+format = "([$ssh_symbol$hostname]($style) )"
+ssh_symbol = " "
+style = "purple"
+
+[directory]
+style = "blue"
+read_only = " 󰉐 "
+read_only_style = "red"
+
+[character]
+success_symbol = "[❯](green)"
+error_symbol = "[❯](red)"
+
+[git_branch]
+format = "[$branch]($style)"
+style = "white"
+
+[git_state]
+format = "[|$state( $progress_current/$progress_total)]($style)"
+style = "white"
+
+[git_status]
+format = "[(*$conflicted$untracked$modified$staged$renamed$deleted )](bold bright-white)[($ahead_behind )](bold bright-white)[($stashed )](bold bright-white)"
+
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "bold yellow"

@@ -12,6 +12,12 @@ pub enum TerminalEmulator {
     Alacritty,
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub enum PromptEngine {
+    Custom,
+    Starship,
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Theme {
     pub name: String,

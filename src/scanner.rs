@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use crate::models::{Shell, TerminalEmulator, Theme};
+use crate::models::{PromptEngine, Shell, TerminalEmulator, Theme};
 
 pub fn scan_shells(entries: &[(Shell, &Path)]) -> Vec<Shell> {
     let mut seen: HashSet<Shell> = HashSet::new();
@@ -22,6 +22,17 @@ pub fn scan_terminal_emulators(entries: &[(TerminalEmulator, &Path)]) -> Vec<Ter
     for (terminal_emulator, path) in entries {
         if path.exists() && seen.insert(terminal_emulator.clone()) {
             result.push(terminal_emulator.clone());
+        }
+    }
+    result
+}
+
+pub fn scan_prompt_engines(entries: &[(PromptEngine, &Path)]) -> Vec<PromptEngine> {
+    let mut seen: std::collections::HashSet<PromptEngine> = std::collections::HashSet::new();
+    let mut result: Vec<PromptEngine> = Vec::new();
+    for (prompt_engine, path) in entries {
+        if path.exists() && seen.insert(prompt_engine.clone()) {
+            result.push(prompt_engine.clone());
         }
     }
     result
@@ -214,6 +225,33 @@ mod tests {
         let result = scan_shells(&entries);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], Shell::Zsh);
+    }
+
+    #[test]
+    fn test_scan_prompt_engines_returns_starship_when_binary_exists() {
+        let entries = [(PromptEngine::Starship, Path::new("/bin/sh"))];
+        let result = scan_prompt_engines(&entries);
+        assert_eq!(result, vec![PromptEngine::Starship]);
+    }
+
+    #[test]
+    fn test_scan_prompt_engines_skips_missing_binaries() {
+        let entries = [(
+            PromptEngine::Starship,
+            Path::new("/tmp/does-not-exist-starship-bin-abc123"),
+        )];
+        let result = scan_prompt_engines(&entries);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_scan_prompt_engines_deduplicates() {
+        let entries = [
+            (PromptEngine::Starship, Path::new("/bin/sh")),
+            (PromptEngine::Starship, Path::new("/bin/sh")),
+        ];
+        let result = scan_prompt_engines(&entries);
+        assert_eq!(result, vec![PromptEngine::Starship]);
     }
 
     #[test]

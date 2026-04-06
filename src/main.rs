@@ -10,8 +10,11 @@ mod tui;
 use std::path::Path;
 
 use inquire::InquireError;
-use models::{Font, Shell, TerminalEmulator, UserSelection};
-use scanner::{scan_installed_themes, scan_shells, scan_terminal_emulators, seed_default_themes};
+use models::{Font, PromptEngine, Shell, TerminalEmulator, UserSelection};
+use scanner::{
+    scan_installed_themes, scan_prompt_engines, scan_shells, scan_terminal_emulators,
+    seed_default_themes,
+};
 
 fn main() {
     if std::env::args().any(|a| a == "--help" || a == "-h") {
@@ -67,6 +70,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     ];
     let detected_terminal_emulators = scan_terminal_emulators(&terminal_emulator_entries);
 
+    let prompt_engine_entries = [
+        (
+            PromptEngine::Starship,
+            Path::new("/opt/homebrew/bin/starship"),
+        ),
+        (PromptEngine::Starship, Path::new("/usr/local/bin/starship")),
+        (PromptEngine::Starship, Path::new("/usr/bin/starship")),
+    ];
+    let detected_prompt_engines = scan_prompt_engines(&prompt_engine_entries);
+
     let home = std::env::var("HOME").unwrap_or_default();
     let font_dirs = font::font_dirs(&home);
     let font_dir_refs: Vec<&std::path::Path> = font_dirs.iter().map(|p| p.as_path()).collect();
@@ -86,13 +99,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         theme: tui::select_theme(themes)?,
     };
 
+    let prompt_engine = tui::select_prompt_engine(detected_prompt_engines)?;
+
     let plan = engine::generate_plan(selection);
     engine::print_summary(&plan);
 
     let output_dir = std::path::PathBuf::from(std::env::var("HOME").unwrap_or_default())
         .join(".config/dotfiles/rendered");
     std::fs::create_dir_all(&output_dir).ok();
-    engine::execute_plan(&plan, &output_dir);
+    engine::execute_plan(&plan, &output_dir, &prompt_engine);
 
     Ok(())
 }

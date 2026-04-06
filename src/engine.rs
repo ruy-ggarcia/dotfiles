@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::models::{Plan, Shell, TerminalEmulator, UserSelection};
+use crate::models::{Plan, PromptEngine, Shell, TerminalEmulator, UserSelection};
 
 pub fn generate_plan(selection: UserSelection) -> Plan {
     Plan {
@@ -24,7 +24,7 @@ pub fn print_summary(plan: &Plan) {
     println!("==================================");
 }
 
-pub fn execute_plan(plan: &Plan, output_dir: &Path) {
+pub fn execute_plan(plan: &Plan, output_dir: &Path, prompt_engine: &PromptEngine) {
     use crate::{symlink, template};
     use std::collections::HashMap;
 
@@ -38,6 +38,12 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         vars.insert("font_family", plan.font.family.as_str());
         let size_str = plan.font.size.to_string();
         vars.insert("font_size", size_str.as_str());
+        let use_starship = if matches!(prompt_engine, PromptEngine::Starship) {
+            "true"
+        } else {
+            "false"
+        };
+        vars.insert("use_starship", use_starship);
 
         for (key, value) in &plan.theme.colors {
             vars.insert(key.as_str(), value.as_str());
@@ -61,6 +67,24 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path) {
         let rc_path = std::path::Path::new(&home).join(rc_name);
         if let Err(e) = symlink::inject_source_line(&rc_path, &prompt_file) {
             eprintln!("RC inject error: {e}");
+        }
+    }
+
+    if matches!(prompt_engine, PromptEngine::Starship) {
+        let out_file = output_dir.join("starship.toml");
+        if let Err(e) = std::fs::write(&out_file, crate::assets::STARSHIP_CONFIG) {
+            eprintln!("Write error {}: {e}", out_file.display());
+        } else {
+            let home = std::env::var("HOME").unwrap_or_default();
+            let config_dir = std::path::Path::new(&home).join(".config");
+            if let Err(e) = std::fs::create_dir_all(&config_dir) {
+                eprintln!("Cannot create {}: {e}", config_dir.display());
+            } else {
+                let dest = config_dir.join("starship.toml");
+                if let Err(e) = symlink::create_symlink(&out_file, &dest) {
+                    eprintln!("Symlink error for starship.toml: {e}");
+                }
+            }
         }
     }
 

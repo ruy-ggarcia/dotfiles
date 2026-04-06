@@ -2,6 +2,7 @@ pub const ZSH_TEMPLATE: &str = include_str!("../modules/zsh/home/prompt.zsh.tera
 pub const BASH_TEMPLATE: &str = include_str!("../modules/bash/home/prompt.bash.tera");
 pub const KITTY_TEMPLATE: &str = include_str!("../modules/kitty/kitty.conf.tera");
 pub const ALACRITTY_TEMPLATE: &str = include_str!("../modules/alacritty/alacritty.toml.tera");
+pub const STARSHIP_CONFIG: &str = include_str!("../modules/starship/home/starship.toml");
 
 pub const CATPPUCCIN_MACCHIATO: &str = include_str!("../themes/catppuccin_macchiato.toml");
 pub const KANAGAWA_DRAGON: &str = include_str!("../themes/kanagawa_dragon.toml");
@@ -20,6 +21,7 @@ mod tests {
         let mut vars = HashMap::new();
         vars.insert("font_family", "JetBrainsMono Nerd Font");
         vars.insert("font_size", "12");
+        vars.insert("use_starship", "false");
         vars
     }
 
@@ -41,6 +43,11 @@ mod tests {
     #[test]
     fn test_alacritty_template_is_not_empty() {
         assert!(!ALACRITTY_TEMPLATE.is_empty());
+    }
+
+    #[test]
+    fn test_starship_config_is_not_empty() {
+        assert!(!STARSHIP_CONFIG.is_empty());
     }
 
     #[test]

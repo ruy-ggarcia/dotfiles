@@ -4,6 +4,14 @@ Summary of key architecture decisions made for the Dotfiles project.
 
 ## Decisions
 
+### D16: Starship Colors — ANSI Color Roles
+
+- **Date:** 2026-10-14
+- **Status:** Accepted
+- **Context:** The Starship prompt engine ships a static `starship.toml`. Its colors were ad hoc named colors (`black`, `white`, `orange`, …) unrelated to the roles used by the built-in prompt, breaking the PRD requirement that the same palette key maps to the same visual role everywhere. Two sources were evaluated: (1) ANSI color indexes resolved by the terminal emulator, as the built-in prompt already does; (2) rendering `starship.toml` from a Tera template with the theme's hex colors through a Starship `palette`.
+- **Decision:** Keep `starship.toml` static and style every module with an ANSI index assigned to a named role: accent `4` (OS icon, directory), overlay `8` (shell, git branch/state), success `10` and error `9` (prompt character, read-only directory, root user), warning `3` (command duration), identity `6` (user), remote `5` (host) and emphasis `15` (git status). Roles shared with the built-in prompt use the same index as its `DOTFILES_*` variables.
+- **Rationale:** It matches the built-in prompt's contract and works on terminals without truecolor support (e.g. macOS Terminal.app before Tahoe). Since dotfiles themes Kitty and Alacritty with the selected palette, the prompt follows the theme there. Trade-off: on terminals dotfiles does not manage, the prompt uses that terminal's own palette, and colors outside the 16 ANSI slots (e.g. Catppuccin peach or mauve) are unavailable. A test in `src/assets.rs` rejects any color outside these roles.
+
 ### D15: Installer Integration Testing — Non-Interactive `--help` Path
 
 - **Date:** 2026-04-03

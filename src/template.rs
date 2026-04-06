@@ -49,6 +49,15 @@ mod tests {
         let mut vars = HashMap::new();
         vars.insert("font_family", "JetBrainsMono Nerd Font");
         vars.insert("font_size", "12");
+        vars.insert("use_starship", "false");
+        vars
+    }
+
+    fn theme_vars_starship<'a>() -> HashMap<&'a str, &'a str> {
+        let mut vars = HashMap::new();
+        vars.insert("font_family", "JetBrainsMono Nerd Font");
+        vars.insert("font_size", "12");
+        vars.insert("use_starship", "true");
         vars
     }
 
@@ -102,5 +111,21 @@ mod tests {
             !result.contains("{{"),
             "zshrc output should not contain unresolved template variables"
         );
+    }
+
+    #[test]
+    fn test_zshrc_can_render_starship_init() {
+        let template = std::fs::read_to_string("modules/zsh/home/prompt.zsh.tera").unwrap();
+        let vars = theme_vars_starship();
+        let result = render(&template, &vars).unwrap();
+        assert!(result.contains("starship init zsh"));
+    }
+
+    #[test]
+    fn test_bashrc_can_render_starship_init() {
+        let template = std::fs::read_to_string("modules/bash/home/prompt.bash.tera").unwrap();
+        let vars = theme_vars_starship();
+        let result = render(&template, &vars).unwrap();
+        assert!(result.contains("starship init bash"));
     }
 }

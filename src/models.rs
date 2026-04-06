@@ -12,6 +12,12 @@ pub enum TerminalEmulator {
     Alacritty,
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub enum PromptEngine {
+    Custom,
+    Starship,
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Theme {
     pub name: String,
@@ -28,6 +34,7 @@ pub struct Font {
 pub struct UserSelection {
     pub shells: Vec<Shell>,
     pub terminal_emulators: Vec<TerminalEmulator>,
+    pub prompt_engine: PromptEngine,
     pub font: Font,
     pub theme: Theme,
 }
@@ -36,6 +43,7 @@ pub struct UserSelection {
 pub struct Plan {
     pub shells: Vec<Shell>,
     pub terminal_emulators: Vec<TerminalEmulator>,
+    pub prompt_engine: PromptEngine,
     pub font: Font,
     pub theme: Theme,
 }
@@ -81,6 +89,7 @@ mod tests {
         let sel = UserSelection {
             shells: shells.clone(),
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -95,6 +104,7 @@ mod tests {
         let sel = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 12,
@@ -109,6 +119,7 @@ mod tests {
         let sel = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 14,
@@ -123,6 +134,7 @@ mod tests {
         let sel = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 12,
@@ -138,6 +150,7 @@ mod tests {
         let plan = Plan {
             shells: shells.clone(),
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -152,6 +165,7 @@ mod tests {
         let plan = Plan {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 12,
@@ -166,6 +180,7 @@ mod tests {
         let plan = Plan {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 14,
@@ -180,6 +195,7 @@ mod tests {
         let plan = Plan {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 12,
@@ -194,6 +210,7 @@ mod tests {
         let a = UserSelection {
             shells: vec![Shell::Bash],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 11,
@@ -203,6 +220,7 @@ mod tests {
         let b = UserSelection {
             shells: vec![Shell::Bash],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 11,
@@ -210,5 +228,37 @@ mod tests {
             theme: make_theme("Test"),
         };
         assert_eq!(a, b);
+    }
+
+    #[test]
+    fn test_user_selection_stores_prompt_engine() {
+        let sel = UserSelection {
+            shells: vec![],
+            terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Starship,
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
+            theme: make_theme("Test"),
+        };
+
+        assert_eq!(sel.prompt_engine, PromptEngine::Starship);
+    }
+
+    #[test]
+    fn test_plan_stores_prompt_engine() {
+        let plan = Plan {
+            shells: vec![],
+            terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Starship,
+            font: Font {
+                family: String::from("Hack Nerd Font"),
+                size: 12,
+            },
+            theme: make_theme("Test"),
+        };
+
+        assert_eq!(plan.prompt_engine, PromptEngine::Starship);
     }
 }

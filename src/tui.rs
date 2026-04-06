@@ -1,6 +1,6 @@
 use inquire::{MultiSelect, Select};
 
-use crate::models::{Shell, TerminalEmulator, Theme};
+use crate::models::{PromptEngine, Shell, TerminalEmulator, Theme};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -12,6 +12,35 @@ pub fn select_shells(shells: Vec<Shell>) -> Result<Vec<Shell>> {
         .filter(|shell| selected_names.contains(&format!("{:?}", shell)))
         .collect();
     Ok(result)
+}
+
+fn prompt_engine_label(prompt_engine: &PromptEngine) -> &'static str {
+    match prompt_engine {
+        PromptEngine::Custom => "Custom prompt (default)",
+        PromptEngine::Starship => "Starship",
+    }
+}
+
+pub fn select_prompt_engine(available_prompt_engines: Vec<PromptEngine>) -> Result<PromptEngine> {
+    let mut options = vec![PromptEngine::Custom];
+    if available_prompt_engines.contains(&PromptEngine::Starship) {
+        options.push(PromptEngine::Starship);
+    }
+
+    let labels: Vec<String> = options
+        .iter()
+        .map(|prompt_engine| prompt_engine_label(prompt_engine).to_string())
+        .collect();
+
+    let selected_label = Select::new("Select prompt engine:", labels)
+        .with_starting_cursor(0)
+        .with_vim_mode(true)
+        .prompt()?;
+
+    options
+        .into_iter()
+        .find(|prompt_engine| prompt_engine_label(prompt_engine) == selected_label)
+        .ok_or_else(|| "Prompt engine not found".into())
 }
 
 pub fn select_terminal_emulators(

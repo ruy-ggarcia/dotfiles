@@ -6,6 +6,7 @@ pub fn generate_plan(selection: UserSelection) -> Plan {
     Plan {
         shells: selection.shells,
         terminal_emulators: selection.terminal_emulators,
+        prompt_engine: selection.prompt_engine,
         font: selection.font,
         theme: selection.theme,
     }
@@ -19,14 +20,17 @@ pub fn print_summary(plan: &Plan) {
     for terminal_emulator in &plan.terminal_emulators {
         println!("  · Configure {:?}", terminal_emulator);
     }
+    println!("  · Prompt engine: {:?}", plan.prompt_engine);
     println!("  · Font: {} {}pt", plan.font.family, plan.font.size);
     println!("  · Theme: {}", plan.theme.name);
     println!("==================================");
 }
 
-pub fn execute_plan(plan: &Plan, output_dir: &Path, prompt_engine: &PromptEngine) {
+pub fn execute_plan(plan: &Plan, output_dir: &Path) {
     use crate::{symlink, template};
     use std::collections::HashMap;
+
+    let use_starship = matches!(plan.prompt_engine, PromptEngine::Starship);
 
     for shell in &plan.shells {
         let (template_str, prompt_name, rc_name) = match shell {
@@ -38,12 +42,7 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path, prompt_engine: &PromptEngine
         vars.insert("font_family", plan.font.family.as_str());
         let size_str = plan.font.size.to_string();
         vars.insert("font_size", size_str.as_str());
-        let use_starship = if matches!(prompt_engine, PromptEngine::Starship) {
-            "true"
-        } else {
-            "false"
-        };
-        vars.insert("use_starship", use_starship);
+        vars.insert("use_starship", if use_starship { "true" } else { "false" });
 
         for (key, value) in &plan.theme.colors {
             vars.insert(key.as_str(), value.as_str());
@@ -70,7 +69,7 @@ pub fn execute_plan(plan: &Plan, output_dir: &Path, prompt_engine: &PromptEngine
         }
     }
 
-    if matches!(prompt_engine, PromptEngine::Starship) {
+    if use_starship {
         let out_file = output_dir.join("starship.toml");
         if let Err(e) = std::fs::write(&out_file, crate::assets::STARSHIP_CONFIG) {
             eprintln!("Write error {}: {e}", out_file.display());
@@ -180,6 +179,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -195,6 +195,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Bash, Shell::Zsh],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -210,6 +211,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![Shell::Zsh],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -225,6 +227,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 12,
@@ -240,6 +243,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("Hack Nerd Font"),
                 size: 16,
@@ -255,6 +259,7 @@ mod tests {
         let selection = UserSelection {
             shells: vec![],
             terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Custom,
             font: Font {
                 family: String::from("FiraCode Nerd Font"),
                 size: 12,
@@ -263,6 +268,24 @@ mod tests {
         };
         let plan = generate_plan(selection);
         assert!(plan.shells.is_empty());
+    }
+
+    #[test]
+    fn test_generate_plan_preserves_prompt_engine() {
+        let selection = UserSelection {
+            shells: vec![Shell::Zsh],
+            terminal_emulators: vec![],
+            prompt_engine: PromptEngine::Starship,
+            font: Font {
+                family: String::from("FiraCode Nerd Font"),
+                size: 12,
+            },
+            theme: make_theme("Test"),
+        };
+
+        let plan = generate_plan(selection);
+
+        assert_eq!(plan.prompt_engine, PromptEngine::Starship);
     }
 
     #[test]

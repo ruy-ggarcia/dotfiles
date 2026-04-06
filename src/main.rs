@@ -92,6 +92,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let selection = UserSelection {
         shells: tui::select_shells(detected_shells)?,
         terminal_emulators: tui::select_terminal_emulators(detected_terminal_emulators)?,
+        prompt_engine: tui::select_prompt_engine(detected_prompt_engines)?,
         font: Font {
             family: tui::select_font(detected_fonts)?,
             size: tui::select_font_size()?,
@@ -99,15 +100,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         theme: tui::select_theme(themes)?,
     };
 
-    let prompt_engine = tui::select_prompt_engine(detected_prompt_engines)?;
-
     let plan = engine::generate_plan(selection);
     engine::print_summary(&plan);
 
     let output_dir = std::path::PathBuf::from(std::env::var("HOME").unwrap_or_default())
         .join(".config/dotfiles/rendered");
     std::fs::create_dir_all(&output_dir).ok();
-    engine::execute_plan(&plan, &output_dir, &prompt_engine);
+    engine::execute_plan(&plan, &output_dir);
 
     Ok(())
 }

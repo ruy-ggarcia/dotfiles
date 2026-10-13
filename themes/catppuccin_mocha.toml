@@ -1,0 +1,52 @@
+name = "Catppuccin Mocha"
+
+# Catppuccin Mocha - native palette (from catppuccin/palette)
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+text      = "#cdd6f4"
+subtext1  = "#bac2de"
+subtext0  = "#a6adc8"
+overlay2  = "#9399b2"
+overlay1  = "#7f849c"
+overlay0  = "#6c7086"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"
+
+# UI colors - consumed by terminal emulator templates
+cursor       = "#f5e0dc" # rosewater
+selection_bg = "#585b70" # surface2
+selection_fg = "#cdd6f4" # text
+
+# ANSI color palette - from the official Catppuccin palette
+color0  = "#45475a"
+color1  = "#f38ba8"
+color2  = "#a6e3a1"
+color3  = "#f9e2af"
+color4  = "#89b4fa"
+color5  = "#f5c2e7"
+color6  = "#94e2d5"
+color7  = "#a6adc8"
+color8  = "#585b70"
+color9  = "#f37799"
+color10 = "#89d88b"
+color11 = "#ebd391"
+color12 = "#74a8fc"
+color13 = "#f2aede"
+color14 = "#6bd7ca"
+color15 = "#bac2de"

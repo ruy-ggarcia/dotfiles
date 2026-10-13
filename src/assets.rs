@@ -4,10 +4,12 @@ pub const KITTY_TEMPLATE: &str = include_str!("../modules/kitty/kitty.conf.tera"
 pub const ALACRITTY_TEMPLATE: &str = include_str!("../modules/alacritty/alacritty.toml.tera");
 
 pub const CATPPUCCIN_MACCHIATO: &str = include_str!("../themes/catppuccin_macchiato.toml");
+pub const CATPPUCCIN_MOCHA: &str = include_str!("../themes/catppuccin_mocha.toml");
 pub const KANAGAWA_DRAGON: &str = include_str!("../themes/kanagawa_dragon.toml");
 
 pub const DEFAULT_THEMES: &[(&str, &str)] = &[
     ("catppuccin_macchiato.toml", CATPPUCCIN_MACCHIATO),
+    ("catppuccin_mocha.toml", CATPPUCCIN_MOCHA),
     ("kanagawa_dragon.toml", KANAGAWA_DRAGON),
 ];
 
@@ -73,5 +75,24 @@ mod tests {
     fn test_bash_template_has_no_unresolved_vars() {
         let result = crate::template::render(BASH_TEMPLATE, &shell_vars()).unwrap();
         assert!(!result.contains("{{"));
+    }
+
+    #[test]
+    fn test_default_themes_include_catppuccin_mocha() {
+        assert!(
+            DEFAULT_THEMES
+                .iter()
+                .any(|(filename, _)| *filename == "catppuccin_mocha.toml")
+        );
+    }
+
+    #[test]
+    fn test_all_default_themes_are_valid() {
+        for (filename, content) in DEFAULT_THEMES {
+            assert!(
+                crate::scanner::validate_theme(content).is_ok(),
+                "{filename} should contain a valid theme"
+            );
+        }
     }
 }

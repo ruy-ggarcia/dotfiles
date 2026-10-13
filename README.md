@@ -11,7 +11,7 @@ Implemented in the current codebase:
 - **Platforms:** macOS and Linux
 - **Shells:** Bash and Zsh
 - **Terminal emulators:** Kitty and Alacritty
-- **Built-in themes:** Catppuccin Macchiato and Kanagawa Dragon
+- **Built-in themes:** Catppuccin Macchiato, Catppuccin Mocha, and Kanagawa Dragon
 - **Configured release targets:**
   - `aarch64-apple-darwin`
   - `x86_64-apple-darwin`

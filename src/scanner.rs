@@ -341,4 +341,20 @@ mod tests {
         let result = validate_theme(toml_str);
         assert!(result.is_err());
     }
+
+    #[test]
+    fn test_seeded_themes_include_catppuccin_mocha() {
+        let base = tempfile::tempdir().unwrap();
+        seed_default_themes(base.path()).unwrap();
+
+        assert!(base.path().join("defaults/catppuccin_mocha.toml").is_file());
+
+        let themes = scan_installed_themes(base.path());
+        let mocha = themes
+            .iter()
+            .find(|theme| theme.name == "Catppuccin Mocha")
+            .expect("Catppuccin Mocha should be discoverable");
+        assert_eq!(mocha.colors["base"], "#1e1e2e");
+        assert_eq!(mocha.colors["text"], "#cdd6f4");
+    }
 }

@@ -2,3 +2,4 @@ target/
 .atl/
 
 .worktrees/
+.release-backlog.md

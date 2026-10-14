@@ -11,6 +11,7 @@ Implemented in the current codebase:
 - **Platforms:** macOS and Linux
 - **Shells:** Bash and Zsh
 - **Terminal emulators:** Kitty and Alacritty
+- **Prompt engines:** the built-in prompt, or [Starship](https://starship.rs) when it is installed
 - **Built-in themes:** Catppuccin Macchiato and Kanagawa Dragon
 - **Configured release targets:**
   - `aarch64-apple-darwin`
@@ -29,15 +30,16 @@ What is **not** implemented yet, even if it appears in planning docs:
 
 When you run `dotfiles`, it:
 
-1. detects supported shells and terminal emulators already present on your machine
+1. detects supported shells, terminal emulators, and Starship already present on your machine
 2. scans standard font directories for installed Nerd Fonts
 3. seeds the default themes into `~/.config/dotfiles/themes/defaults/`
-4. walks you through shell, terminal, font, font-size, and theme selection
+4. walks you through shell, terminal, prompt engine, font, font-size, and theme selection
 5. renders managed files into `~/.config/dotfiles/rendered/`
 6. appends a guarded `source` line to `~/.zshrc` and/or `~/.bashrc`
 7. symlinks generated terminal config into Kitty and/or Alacritty's standard config path
+8. if you choose Starship, symlinks the generated `starship.toml` into `~/.config/starship.toml`
 
-If Kitty or Alacritty already have regular config files, `dotfiles` backs them up to timestamped `*.bak` files before replacing them with symlinks.
+If Kitty, Alacritty, or Starship already have regular config files, `dotfiles` backs them up to timestamped `*.bak` files before replacing them with symlinks.
 
 ## Requirements
 
@@ -93,6 +95,7 @@ Typical prompt flow:
 
 - select shells to configure
 - select terminal emulators to configure
+- choose a prompt engine (the built-in prompt, or Starship when detected)
 - choose a Nerd Font
 - choose a font size
 - choose a theme
@@ -106,6 +109,7 @@ Generated output lives under:
 - `~/.config/dotfiles/rendered/prompt.bash`
 - `~/.config/dotfiles/rendered/kitty.conf`
 - `~/.config/dotfiles/rendered/alacritty.toml`
+- `~/.config/dotfiles/rendered/starship.toml`
 
 Integration points:
 
@@ -113,6 +117,13 @@ Integration points:
 - `~/.bashrc` — appends a guarded source line; does not replace the file
 - `~/.config/kitty/kitty.conf` — symlink to generated config
 - `~/.config/alacritty/alacritty.toml` — symlink to generated config
+- `~/.config/starship.toml` — symlink to generated config (only when Starship is selected)
+
+## Prompt engines
+
+The built-in prompt is the default. Starship is offered only when its binary is found in `/opt/homebrew/bin`, `/usr/local/bin`, or `/usr/bin`.
+
+Both prompts use ANSI color indexes, so their colors come from your terminal's palette: they follow the selected theme when `dotfiles` also configures Kitty or Alacritty. If Starship is uninstalled later, your shell falls back to the built-in prompt.
 
 ## Themes
 

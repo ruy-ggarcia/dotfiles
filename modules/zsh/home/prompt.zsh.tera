@@ -8,6 +8,13 @@ export DOTFILES_OVERLAY="8"  # Bright Black / Grey (ANSI 8)
 export DOTFILES_SUCCESS="10" # Bright Green (ANSI 10)
 export DOTFILES_ERROR="9"    # Bright Red (ANSI 9)
 
+{% if use_starship == "true" %}
+# Fall back to the built-in prompt if Starship is no longer installed
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+else
+{% endif %}
+
 # Git Information Configuration
 setopt PROMPT_SUBST
 autoload -Uz vcs_info
@@ -30,3 +37,6 @@ PROMPT="${c_accent}${os_icon}${c_reset} "         # Icon
 PROMPT+="${c_accent}%1~${c_reset}"                # Folder
 PROMPT+="${c_grey}\${vcs_info_msg_0_}${c_reset} " # Git
 PROMPT+="%(?.${c_ok}.${c_err})❯${c_reset} "       # Indicator
+{% if use_starship == "true" %}
+fi
+{% endif %}

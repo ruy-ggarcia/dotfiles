@@ -1,0 +1,70 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$shell\
+$username\
+$hostname\
+$directory\
+([git:\\($git_branch$git_state\\) ](8))\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+[os]
+disabled = false
+format = '[$symbol]($style) '
+style = "4"
+
+[os.symbols]
+Arch = " "
+Debian = " "
+Macos = " "
+Ubuntu = " "
+
+[shell]
+disabled = false
+style = "8"
+
+[username]
+format = "([$user]($style) )"
+style_root = "bold underline 9"
+style_user = "6"
+
+[hostname]
+format = "([$ssh_symbol$hostname]($style) )"
+ssh_symbol = " "
+style = "5"
+
+[directory]
+style = "4"
+read_only = " 󰉐 "
+read_only_style = "9"
+
+[character]
+success_symbol = "[❯](10)"
+error_symbol = "[❯](9)"
+
+[git_branch]
+format = "[$branch]($style)"
+style = "8"
+
+[git_state]
+format = "[|$state( $progress_current/$progress_total)]($style)"
+style = "8"
+
+[git_status]
+format = "[(*$conflicted$untracked$modified$staged$renamed$deleted )](bold 15)[($ahead_behind )](bold 15)[($stashed )](bold 15)"
+
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "bold 3"

@@ -8,6 +8,13 @@ export DOTFILES_OVERLAY="8"  # Grey / Bright Black
 export DOTFILES_SUCCESS="10" # Bright Green
 export DOTFILES_ERROR="9"    # Bright Red
 
+{% if use_starship == "true" %}
+# Fall back to the built-in prompt if Starship is no longer installed
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+else
+{% endif %}
+
 # Helper function to extract Git branch name
 get_git_branch() {
   git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:(\1)/'
@@ -39,3 +46,6 @@ build_prompt() {
 
 # Run the builder before every prompt
 PROMPT_COMMAND=build_prompt
+{% if use_starship == "true" %}
+fi
+{% endif %}
